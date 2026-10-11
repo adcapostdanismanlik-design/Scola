@@ -73,6 +73,23 @@ Sunucuyla açıldığında (`npm run dev`) çalışır; dosya olarak açılırsa
 - XP kazanınca yüzen "+N XP", seviye atlayınca kutlama; kartlarda imleçle eğim, kademeli giriş, dönen hero kelimesi, kıvılcım patlamaları, paralaks.
 - `prefers-reduced-motion` açıkken tüm hareketler kapanır (çark sonucu anında verir, otomatik balon çıkmaz). Bu katman yalnız süstür; XP, ödeme veya hak kararı vermez.
 
+### Demo eğitimler (v0.9, `dist/assets/courses.js`)
+
+8 modüllü örnek eğitim (eğitmenler gerçek kişi değildir, kartlarda "örnek" yazar) + 3 mevcut kısa eğitim. Her biri: hedef sayfası (kazanım), 3 modül (kısa anlatım, iyi / zayıf örnek, kendini yoklama soruları açıklamalı geri bildirimle), uygulama çıktısı, 4 maddelik rubrik (kendi kontrolün; bağımsız değerlendirme değildir) ve gerçek göreve / Meydan'a / Gelişim yolum'a bağlantı.
+
+| Alan | Eğitim | Etkileşimli araç |
+|---|---|---|
+| Sanat | Renkleri karıştır, dengeli bir palet kur | Boya karıştırıcı (hedef renk, üç renk uyarısı) |
+| Kültür | Bir hikâyeyi kaynağıyla belgele | Kaynaklı / duyum sınıflaması |
+| Müzik | Ritmi duy, kalıbı yaz | 8 adımlık ritim sekansörü (Web Audio, tempo ayarı) |
+| Oyun | Tek mekanikli bir oyun tasarla | Kendini yoklama senaryoları |
+| Ticaret | Küçük bir ürünün kâr hesabı | Kâr / başa baş hesaplayıcı |
+| Yazı | Karışık metni sade yaz | Ağır sözcük avı |
+| Mentörlük (Fidan için) | Yoldaşlık etmek: iyi mentör nasıl olur? | Güvenlik senaryoları (kişisel bilgi, hediye) |
+| Başlangıç | İlk hafta: rota, mentör, ilk katkı | Aşama ve rota soruları |
+
+Akademi sayfasında alan sekmeleri ve düzey etiketleri var. XP yalnız bu tarayıcıdaki demo ilerlemedir (ilk tamamlamada bir kez; kısa çıktı sayılmaz, kendi eğitimine XP yok) ve Gelişim (Level) aşamasını etkilemez. Doğrulanmış eğitim, katılımcı çıktısı incelemesi ve eğitmen yayın onayı ROADMAP Aşama 2'dedir.
+
 ### Gelişim sistemi: Tohum → Fidan → Ağaç → Orman (v0.8)
 
 - Sitenin Level sistemi oyundan **bağımsızdır** (ayrıntı: PRODUCT_MODEL.md). Hesap `dist/assets/growth.js` ile hem sunucuda (doğrulanmış) hem tarayıcıda (demo gösterimi) yapılır; kenar çubuğu, ana sayfa kartı ve "Aşamalar nasıl işler?" penceresi bunu kullanır.
