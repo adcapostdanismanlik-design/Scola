@@ -9,7 +9,7 @@ const db=openDb(null);
 let clock=1e6;const hub=createHub({db,now:()=>clock,autoTick:false});
 const fake=()=>{const ev=[];return {ev,write(c){const m=/^event: (\w+)\ndata: (.*)\n\n$/s.exec(c);if(m)ev.push([m[1],JSON.parse(m[2])])},end(){this.ended=true},last(n){return this.ev.filter(e=>e[0]===n).at(-1)?.[1]}}};
 const run=(s,dt=0.05)=>{for(let i=0;i<Math.round(s/dt);i++){clock+=dt*1000;hub.step(dt)}};
-const place=(tok,x,y)=>{const p=hub._players.get(tok);p.x=x;p.y=y;p.dx=p.dy=0;p.target=null};
+const place=(tok,x,y)=>{const p=hub._players.get(tok);p.x=x;p.y=y;p.dx=p.dy=0;p.target=null;p.path=[]};
 const P=tok=>hub._players.get(tok);
 
 // Katılım: misafir adı otomatik, hazır avatar doğrulanır, ilk damga verilir

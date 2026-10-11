@@ -73,6 +73,16 @@ Sunucuyla açıldığında (`npm run dev`) çalışır; dosya olarak açılırsa
 - XP kazanınca yüzen "+N XP", seviye atlayınca kutlama; kartlarda imleçle eğim, kademeli giriş, dönen hero kelimesi, kıvılcım patlamaları, paralaks.
 - `prefers-reduced-motion` açıkken tüm hareketler kapanır (çark sonucu anında verir, otomatik balon çıkmaz). Bu katman yalnız süstür; XP, ödeme veya hak kararı vermez.
 
+### Scola Meydanı 3B (v0.7)
+
+- **3B dünya (Three.js r170, MIT, `dist/assets/vendor/` içinde, internetsiz çalışır):** alçak poligonlu pastel stil, gerçek 3B binalar / ağaçlar / çeşme / portal / sandık, gündün-gece döngüsü (7 dk; gece pencereler yanar), bulutlar, 3B karakterler (yürüme, el sallama, dans emojileri), isim etiketi ve konuşma balonu. Kamera: fareyle sürükle / parmakla sürükle, tekerlek veya çimdikle yakınlaştır; WASD kameraya göre yürütür. Kamera engel arkasına geçince yaklaşır, bir binanın üstündeyken o bina kesit olarak gizlenir.
+- "Basit görünüm" düğmesi 2B yedeğe geçer (WebGL yoksa otomatik). Aynı sunucu protokolü her iki görselleştiriciyi besler; sunucu 2B (x, y) tutar.
+- **Tıkla-yürü yol bulur:** sunucuda A* (20 px ızgara + düzleştirme); ağaç, bina ve kapalı kapıları dolaşır, hedef binanın içindeyse en yakın serbest noktaya gider.
+- **Yeni ekip odaları:** 🖌️ Renk Atölyesi (kırmızı/sarı/mavi pedler; iki kişi aynı anda doğru ikiliye basınca turuncu, yeşil, mor karışır; yanlış karışımda öğretici mesaj, 25 sn takılırsan ipucu) ve 🥁 Ritim Sahnesi (davullar sırayla çalınır, art arda aynı kişi çalamaz, 3 kalıp). **Hepsi en az 2 kişi ister**; tek kişi tamamlayamaz (testlerle doğrulandı).
+- **Tanışma:** yakındaki 3 farklı kişiye "Merhaba" (cümle ya da 👋) dersen 🦋 Sosyal Kelebek damgası. 🤖 Rehber Pusula ilerlemene göre yön gösterir. 📒 Keşif Defteri damgaları ve ipuçlarını listeler.
+- Damgalar: İlk Adım, Sosyal Kelebek, Ada Kaşifi, Renk Ustası, Ritim Ustası (XP vermez; kayıtlı üyelerde kalıcı).
+- Testler: `tests/hub.test.mjs`, `tests/hub-rooms.test.mjs` (motor + SSE). Tarayıcıda yazılım WebGL ile iki oyunculu uçtan uca akış (3B Meydan, her oda, kamera, telefon) betikle doğrulandı; betik depoya eklenmedi. Gerçek GPU performansı bu ortamda ölçülemedi (yazılım çizimi yavaştır).
+
 ### Scola Meydanı: çok oyunculu hub (v0.6)
 
 - Gerçek zamanlı 2B alan (`#hub`): giriş yapmadan misafir olarak da girilir; herkes aynı Meydan'da yürür, birbirini görür. Altyapı bağımlılıksız (SSE + POST); sunucu otoriterdir (konum, hız sınırı, çarpışma, kapı, damga kararları `server/hub.mjs`'de).
@@ -80,7 +90,7 @@ Sunucuyla açıldığında (`npm run dev`) çalışır; dosya olarak açılırsa
 - **Gizemli Ada (iş birliği):** Kaşif Kapısı'ndan geçilir. Kapı, iki kişinin aynı anda iki plakaya (1,5 sn) basmasıyla açılır; tek başına açılamaz. Sonra 3 ipucu bulunur, sandık açılınca odadaki herkes **Ada Kaşifi** damgası alır. Oda 15 sn sonra yeniden kurulur. Damga XP değildir (oyunla XP farm edilmesin).
 - **Güvenli sohbet:** serbest metin ve özel mesaj YOKTUR; yalnız 12 hazır cümle ve 8 emoji. Oyuncuya tıklayıp sessize alabilir ya da bildirebilirsin; bildirimler `/api/admin/hub-reports` ile yöneticiye gider. Misafirlere rastgele ad verilir; üyeler hesap adıyla görünür. Karakter: 8 renk × 10 yüz.
 - Kontroller: WASD / ok tuşları, tıkla-git, telefonda sanal joystick, E ile etkileşim. "Yerler & kişiler" paneli klavye ile de kullanılabilir. Kapasite: Meydan 60, Ada 20 kişi; 3 dk hareketsiz oyuncu atılır.
-- Sınırlar: tek süreçli sunucu için tasarlandı (yatay ölçek için ortak durum/Redis gerekir); canvas oyunu ekran okuyucuya tam erişilebilir değildir (yedek: Yerler & kişiler listesi); hesapsız misafir damgaları sayfa yenilenince kaybolur; sunucu tarafı küfür/uygunsuz ad denetimi yoktur (serbest metin olmadığı için yalnız hesap adları risklidir).
+- Sınırlar (3B dâhil): düşük donanımda 3B yavaş olabilir, "Basit görünüm" vardır; tek süreçli sunucu için tasarlandı (yatay ölçek için ortak durum/Redis gerekir); canvas oyunu ekran okuyucuya tam erişilebilir değildir (yedek: Yerler & kişiler listesi); hesapsız misafir damgaları sayfa yenilenince kaybolur; sunucu tarafı küfür/uygunsuz ad denetimi yoktur (serbest metin olmadığı için yalnız hesap adları risklidir).
 
 ## Çalışan özellikler (demo)
 

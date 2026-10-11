@@ -64,3 +64,14 @@ nav a:hover>span{animation:wiggle .55s ease}
 @media(prefers-reduced-motion:reduce){.hub-prompt,.hub-fact{animation:none}.hub-emote{transition:none}}
 
 @keyframes popin{from{opacity:0;transform:translate(-50%,10px)}to{opacity:1;transform:translate(-50%,0)}}
+
+/* ---- 3B hub ekleri ---- */
+.hub-stage #hub3d{display:block;width:100%;height:100%;cursor:grab;outline-offset:-3px;touch-action:none}.hub-stage #hub3d:active{cursor:grabbing}
+.hub-stage canvas[hidden]{display:none}
+.hub-bar .btn{white-space:nowrap}
+@media(max-width:740px){.hub-bar{flex-wrap:wrap}.hub-grow{display:none}.hub-bar .btn{font-size:9px;padding:7px 9px}}
+.hub-chip{display:inline-block;min-width:22px;text-align:center;padding:1px 8px;border-radius:12px;background:#ece5f6;color:#40354e;font-weight:800;font-size:11px}.hub-chip.ok{background:#d7eca9;color:#374927}
+.hub-quest .hub-chip[style]{color:#fff}
+.journal{display:grid;gap:8px;margin:12px 0}.journal-row{display:flex;align-items:center;gap:12px;background:#f4eefa;border-radius:12px;padding:10px 12px;opacity:.65}.journal-row.got{opacity:1;background:#e9f6d3}.journal-row>span{font-size:26px;width:34px;text-align:center}.journal-row div{flex:1;font-size:12px}.journal-row small{display:block;color:var(--muted);font-size:10px;margin-top:3px}.journal-row b{color:#4a7a22}
+.hub [hidden]{display:none!important}
+@media(max-width:740px){.hub-quest small{display:none}.hub-quest{padding:8px 11px}}
