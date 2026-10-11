@@ -182,3 +182,7 @@ Geliştirme paketi sır, erişim anahtarı, Git kimlik bilgisi veya özel kullan
 ## GitHub Pages (statik demo)
 
 `.github/workflows/pages.yml`, `dist/` klasörünü GitHub Pages'e yayınlar. Sunucu olmadığı için yalnızca yerel demo modu çalışır (hesap, Pazar, Meydan ve inceleme çalışmaz). Bir kez: Settings → Pages → Source: **GitHub Actions**. Workflow `main` dalına birleştirilince çalışır.
+
+## Ağaçkakan mascot'u
+
+`dist/assets/mascot.js` çizimi ve hareketleri tek kaynaktan üretir (`mascot.css` animasyonlar). Boşta nefes alır, göz kırpar, gözleri imleci izler; ara sıra gagalar, başını yatırır, kanat çırpar, zıplar. Tıklayınca gagalar, katkı kutlamasında sevinir. `prefers-reduced-motion` açıkken hareket tamamen kapanır. Hareketler süstür; XP ya da doğrulama anlamı taşımaz.

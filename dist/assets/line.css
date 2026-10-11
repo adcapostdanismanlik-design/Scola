@@ -33,7 +33,7 @@ nav#nav a:hover{text-decoration:underline;text-underline-offset:5px}
 .lg-fold{margin:0 0 18px;border:2px solid var(--line);border-radius:18px;padding:10px 16px}
 .lg-fold>summary{cursor:pointer;font-weight:700}
 .helper-button{background:var(--paper)!important;border:2px solid var(--line)!important}
-.helper-button svg{width:34px;height:34px}
+.helper-button [data-mascot]{display:block;width:46px;height:28px}
 .helper-card,.helper-panel{background:var(--paper)!important;border:2px solid var(--line)!important;color:var(--ink)!important}
 footer{border-top:2px solid var(--line);display:flex;flex-wrap:wrap;gap:12px 24px;justify-content:space-between;padding:18px 24px}
 .foot-links{display:flex;flex-wrap:wrap;gap:6px 18px}
@@ -43,7 +43,7 @@ footer{border-top:2px solid var(--line);display:flex;flex-wrap:wrap;gap:12px 24p
 @media (max-width:760px){.hero{grid-template-columns:1fr}.hero-bird{width:130px}nav#nav{margin-left:10px}}
 @media (prefers-reduced-motion:reduce){.logo:hover .bk-head{animation:none}}
 nav#nav a[hidden]{display:none!important}
-.logo-bird{width:56px;height:56px}
+.logo-bird{width:84px;height:48px}
 .logo-word{font-size:28px}
 .hero{min-height:0}
 .live-panel{background:var(--paper)!important;color:var(--ink)!important;border:2px solid var(--line);background-image:none!important}
