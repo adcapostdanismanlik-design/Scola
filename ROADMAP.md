@@ -2,7 +2,7 @@
 
 ## Aşama 1 — İlk gerçek katkı döngüsü
 
-**Durum (v0.4):** yerel pilotta hesap, roller, görev sözleşmesi, teslim, kör bağımsız inceleme, revizyon, itiraz, çıkar çatışması, idempotent sunucu XP'si ve denetim kaydı çalışıyor. Kalan: kalıcı veritabanı seçimi, e-posta doğrulama / şifre sıfırlama, veli onayı, moderasyon paneli, localStorage içe aktarma.
+**Durum (v0.4):** yerel pilotta hesap, roller, görev sözleşmesi, teslim, kör bağımsız inceleme, revizyon, itiraz, çıkar çatışması, idempotent sunucu XP'si ve denetim kaydı çalışıyor. Topluluk görevi + test emaneti + komisyon + açık defter de çalışıyor (gerçek para yok). Kalan: lisanslı ödeme sağlayıcısı, kalıcı veritabanı seçimi, e-posta doğrulama / şifre sıfırlama, veli onayı, moderasyon paneli, localStorage içe aktarma.
 
 - Mevcut UI ve oyunları tarayıcıda QA.
 - Hesap, oturum, profil; üretici / eğitmen / değerlendirici / yönetici rolleri.

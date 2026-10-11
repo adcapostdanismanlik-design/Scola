@@ -43,6 +43,14 @@ Sunucuyla açıldığında (`npm run dev`) çalışır; dosya olarak açılırsa
 - Portfolyo: kabul edilen kanıt, doğrulanmış XP ve geri bildirim. Demo XP doğrulanmış XP'ye çevrilmez.
 - Denetim kaydı (auditLog) her durum değişikliği için.
 
+### Topluluk görevleri ve TEST MODU emanet (hackathon demosu)
+
+- Giriş yapan herkes görev açabilir (ücret 50–5000 ₺, en fazla 5 açık görev, 2–6 kabul ölçütü). Ücret açılırken **simüle** emanete alınır; açık onay kutusu gerekir.
+- Başka bir kullanıcı teslim eder; bağımsız değerlendirici kabul ederse ücret tek kazanana komisyon düşülerek serbest bırakılır, diğer bekleyen teslimler kapanır. Teslim beklemiyorsa görev sahibi iptal edip iade alabilir.
+- Görev sahibi kendi görevine teslim yapamaz ve kendi görevinin değerlendiricisi olamaz. Komisyon oranı `SCOLA_COMMISSION_PCT` (varsayılan 10) ile ayarlanır; bu oran demo değeridir, ürün kararı değildir.
+- Herkese açık, anonim **emanet defteri** (`/api/ledger`): emanet, serbest bırakma ve iade kayıtları.
+- **Gerçek para yoktur.** Arayüz ve API her yerde TEST MODU yazar. Gerçek para için lisanslı ödeme sağlayıcısı (bloke/pazaryeri), hukuki inceleme, kimlik doğrulama ve reşit olmayanlar için veli onayı gerekir. Açık kaynak kod güveni tek başına sağlamaz; para sağlayıcıda tutulmalıdır.
+
 ## Çalışan özellikler (demo)
 
 - Altı bölüm: keşif, görev meydanı, akademi, üretim alanı, topluluk, etki ve destek.

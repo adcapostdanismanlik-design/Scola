@@ -5,7 +5,7 @@ import {randomBytes,scryptSync,timingSafeEqual,createHash} from 'node:crypto';
 import {openDb} from './db.mjs';
 import {missions,missionById} from './missions.mjs';
 
-const SESSION_DAYS=14,MAX_BODY=64*1024,FEEDBACK_MIN=40,RING_DAYS=30;
+const TASK_XP=100,MIN_REWARD=50,MAX_REWARD=5000,MAX_OPEN_TASKS=5,SESSION_DAYS=14,MAX_BODY=64*1024,FEEDBACK_MIN=40,RING_DAYS=30;
 const now=()=>new Date().toISOString();
 const id=()=>randomBytes(9).toString('base64url');
 const sha=s=>createHash('sha256').update(s).digest('hex');
@@ -18,8 +18,15 @@ function checkPassword(pw,stored){const [,salt,hash]=String(stored).split('$');i
 
 const str=(v,min,max,label)=>{const s=typeof v==='string'?v.trim():'';if(s.length<min||s.length>max)fail(400,'invalid_'+label,`${label}: ${min}–${max} karakter olmalı.`);return s};
 
-export function createApi({dbFile=null,adminEmails=[],secureCookie=false}={}){
+export function createApi({dbFile=null,adminEmails=[],secureCookie=false,commissionPct=10}={}){
   const db=openDb(dbFile);
+  // TEST MODU: gerçek para hareketi yok. Emanet defteri, ödeme sağlayıcısı bağlandığında
+  // onun bloke/serbest bırakma çağrılarının yerini alacak sunucu tarafı kayıttır.
+  const taskContract=t=>({id:t.id,title:t.title,area:'task',xp:TASK_XP,maxAttempts:1,community:true,posterId:t.posterId,scope:t.scope,duration:t.duration,acceptance:t.acceptance,
+    payment:{type:'escrow-test',amount:t.reward,currency:'TRY',label:`${t.reward} ₺ emanette · TEST MODU`,detail:'Ücret görev açılırken emanete alınır (gerçek para yok). Kabulde katılımcıya komisyon düşülerek serbest bırakılır; kimseye ödenmeden iptal edilirse iade edilir.'},
+    license:'Kabul edilen teslimin kullanım hakkı, ödeme serbest bırakılınca görevi açan kişiye geçer. Kabul edilmeyen teslimin hakları sende kalır.',
+    share:`Tek kazanan. Scola komisyonu %${commissionPct}, ödemeden düşülür.`});
+  const contract=cid=>missionById(cid)||(()=>{const t=db.data.tasks.find(t=>t.id===cid);return t?taskContract(t):null})();
   const admins=new Set(adminEmails.map(e=>e.trim().toLowerCase()).filter(Boolean));
   const loginFailures=new Map();
 
@@ -42,7 +49,7 @@ export function createApi({dbFile=null,adminEmails=[],secureCookie=false}={}){
   const need=(user,role)=>{if(!user)fail(401,'auth_required','Önce giriş yap.');if(role&&!user.roles.includes(role))fail(403,'forbidden','Bu işlem için yetkin yok.');return user};
 
   const submissionView=(s,{forAuthor=false}={})=>{
-    const m=missionById(s.missionId);
+    const m=contract(s.missionId);
     const reviews=db.data.reviews.filter(r=>r.submissionId===s.id).map(r=>({id:r.id,decision:r.decision,checks:r.checks,feedback:r.feedback,createdAt:r.createdAt,reviewer:forAuthor?'Bağımsız değerlendirici':r.reviewerId}));
     const xpEvent=db.data.xpEvents.find(e=>e.sourceId===s.id);
     return {id:s.id,missionId:s.missionId,missionTitle:m?.title,title:s.title,output:s.output,impact:s.impact,status:s.status,attempt:s.attempt,createdAt:s.createdAt,updatedAt:s.updatedAt,appeal:s.appeal||null,reviews,xpAwarded:xpEvent?.points||0};
@@ -53,6 +60,7 @@ export function createApi({dbFile=null,adminEmails=[],secureCookie=false}={}){
   // teslim, beyan edilmiş çıkar çatışması ve karşılıklı kabul halkası engellenir.
   function reviewBlock(reviewer,s){
     if(s.userId===reviewer.id)return 'Kendi teslimini değerlendiremezsin.';
+    if(contract(s.missionId)?.posterId===reviewer.id)return 'Kendi açtığın görevin tesliminde değerlendirici olamazsın (çıkar çatışması).';
     if(db.data.reviews.some(r=>r.submissionId===s.id&&r.reviewerId===reviewer.id))return 'Bu teslimi daha önce değerlendirdin; itiraz başka bir değerlendiriciye gider.';
     if(db.data.conflicts.some(c=>c.submissionId===s.id&&c.reviewerId===reviewer.id))return 'Bu teslim için çıkar çatışması beyan ettin.';
     const since=new Date(Date.now()-RING_DAYS*864e5).toISOString();
@@ -97,7 +105,8 @@ export function createApi({dbFile=null,adminEmails=[],secureCookie=false}={}){
     ['GET','/api/me',({user})=>{
       if(!user)return {user:null};
       const subs=db.data.submissions.filter(s=>s.userId===user.id);
-      return {user:publicUser(user),xp:xpOf(user.id),accepted:subs.filter(s=>s.status==='accepted').length,pending:subs.filter(s=>['submitted','appealed'].includes(s.status)).length};
+      const earned=db.data.escrow.filter(e=>e.status==='released'&&e.payeeId===user.id).reduce((t,e)=>t+e.net,0),held=db.data.escrow.filter(e=>e.status==='held'&&e.posterId===user.id).reduce((t,e)=>t+e.amount,0);
+      return {user:publicUser(user),xp:xpOf(user.id),accepted:subs.filter(s=>s.status==='accepted').length,pending:subs.filter(s=>['submitted','appealed'].includes(s.status)).length,earned:earned/100,held:held/100,testMode:true};
     }],
 
     ['GET','/api/missions',({user})=>({missions:missions.map(m=>{
@@ -108,7 +117,8 @@ export function createApi({dbFile=null,adminEmails=[],secureCookie=false}={}){
 
     ['POST','/api/missions/:id/submissions',({user,params,body})=>{
       need(user);
-      const m=missionById(params.id)||fail(404,'mission_not_found','Görev bulunamadı.');
+      const m=contract(params.id)||fail(404,'mission_not_found','Görev bulunamadı.');
+      if(m.community){if(m.posterId===user.id)fail(403,'own_task','Kendi görevine teslim yapamazsın.');if(db.data.tasks.find(t=>t.id===m.id).status!=='open')fail(409,'task_closed','Bu görev artık açık değil.')}
       const title=str(body.title,4,120,'title'),output=str(body.output,100,5000,'output'),impact=typeof body.impact==='string'?body.impact.slice(0,60):'';
       return db.tx(d=>{
         const mine=d.submissions.filter(s=>s.userId===user.id&&s.missionId===m.id);
@@ -145,7 +155,7 @@ export function createApi({dbFile=null,adminEmails=[],secureCookie=false}={}){
     ['GET','/api/reviews/queue',({user})=>{
       need(user,'reviewer');
       const items=db.data.submissions.filter(s=>['submitted','appealed'].includes(s.status)&&!reviewBlock(user,s)).sort((a,b)=>a.updatedAt.localeCompare(b.updatedAt));
-      return {queue:items.map(s=>{const m=missionById(s.missionId);return {id:s.id,missionId:s.missionId,missionTitle:m.title,acceptance:m.acceptance,xp:m.xp,author:blindAuthor(s),title:s.title,output:s.output,impact:s.impact,status:s.status,appeal:s.appeal||null,previousReviews:db.data.reviews.filter(r=>r.submissionId===s.id).map(r=>({decision:r.decision,feedback:r.feedback})),submittedAt:s.updatedAt}})};
+      return {queue:items.map(s=>{const m=contract(s.missionId);return {id:s.id,missionId:s.missionId,missionTitle:m.title,acceptance:m.acceptance,xp:m.xp,reward:m.community?m.payment.amount:0,author:blindAuthor(s),title:s.title,output:s.output,impact:s.impact,status:s.status,appeal:s.appeal||null,previousReviews:db.data.reviews.filter(r=>r.submissionId===s.id).map(r=>({decision:r.decision,feedback:r.feedback})),submittedAt:s.updatedAt}})};
     }],
 
     ['POST','/api/submissions/:id/conflict',({user,params,body})=>{
@@ -165,7 +175,7 @@ export function createApi({dbFile=null,adminEmails=[],secureCookie=false}={}){
         const s=d.submissions.find(s=>s.id===params.id)||fail(404,'not_found','Teslim bulunamadı.');
         if(!['submitted','appealed'].includes(s.status))fail(409,'not_reviewable','Bu teslim şu anda incelemeye açık değil.');
         const block=reviewBlock(user,s);if(block)fail(403,'review_blocked',block);
-        const m=missionById(s.missionId);
+        const m=contract(s.missionId);
         const checks=Array.isArray(body.checks)?m.acceptance.map((_,i)=>body.checks[i]===true):m.acceptance.map(()=>false);
         if(decision==='accept'&&!checks.every(Boolean))fail(400,'criteria_unmet','Kabul için bütün kabul ölçütleri karşılanmış olmalı.');
         const review={id:id(),submissionId:s.id,reviewerId:user.id,decision,checks,feedback,createdAt:now()};
@@ -177,10 +187,54 @@ export function createApi({dbFile=null,adminEmails=[],secureCookie=false}={}){
           const key=`mission:${m.id}:${s.userId}`;
           if(!d.xpEvents.some(e=>e.key===key)){d.xpEvents.push({id:id(),key,userId:s.userId,points:m.xp,sourceType:'submission',sourceId:s.id,reviewId:review.id,createdAt:now()});xpAwarded=m.xp}
         }
+        let payout=null;
+        if(decision==='accept'&&m.community){
+          const t=d.tasks.find(t=>t.id===m.id),e=d.escrow.find(e=>e.taskId===t.id&&e.status==='held');
+          if(e){const commission=Math.round(e.amount*commissionPct/100);Object.assign(e,{status:'released',payeeId:s.userId,commission,net:e.amount-commission,releasedAt:now(),submissionId:s.id});t.status='paid';
+            d.submissions.filter(x=>x.missionId===t.id&&x.id!==s.id&&['submitted','appealed','revision'].includes(x.status)).forEach(x=>{x.status='closed';x.updatedAt=now()});
+            payout={gross:e.amount/100,commission:commission/100,net:e.net/100};audit(d,user.id,'escrow.release',t.id,{...payout,payee:s.userId,testMode:true})}
+        }
         audit(d,user.id,'review.'+decision,s.id,{reviewId:review.id,xpAwarded});
-        return {review:{id:review.id,decision,checks,feedback},status:s.status,xpAwarded};
+        return {review:{id:review.id,decision,checks,feedback},status:s.status,xpAwarded,payout};
       });
     }],
+
+    ['GET','/api/tasks',({user})=>({commissionPct,testMode:true,tasks:db.data.tasks.filter(t=>t.status==='open').sort((a,b)=>b.createdAt.localeCompare(a.createdAt)).map(t=>{const c=taskContract(t);const mine=user?db.data.submissions.find(s=>s.userId===user.id&&s.missionId===t.id):null;return {...c,posterName:db.data.users.find(u=>u.id===t.posterId)?.name,createdAt:t.createdAt,own:user?.id===t.posterId,myStatus:mine?.status||null,attemptsUsed:mine?1:0}})})],
+
+    ['POST','/api/tasks',({user,body})=>{
+      need(user);
+      const title=str(body.title,6,120,'title'),scope=str(body.scope,40,1500,'scope'),duration=str(body.duration||'Belirtilmedi',2,40,'duration');
+      const reward=Number(body.reward);if(!Number.isInteger(reward)||reward<MIN_REWARD||reward>MAX_REWARD)fail(400,'invalid_reward',`Ücret ${MIN_REWARD}–${MAX_REWARD} ₺ arasında tam sayı olmalı.`);
+      const acceptance=(Array.isArray(body.acceptance)?body.acceptance:[]).map(a=>typeof a==='string'?a.trim():'').filter(Boolean);
+      if(acceptance.length<2||acceptance.length>6||acceptance.some(a=>a.length<5||a.length>160))fail(400,'invalid_acceptance','2–6 kabul ölçütü yaz (her biri 5–160 karakter).');
+      if(body.confirm!==true)fail(400,'confirm_required','Ücretin emanete alınacağını onaylaman gerekir.');
+      return db.tx(d=>{
+        if(d.tasks.filter(t=>t.posterId===user.id&&t.status==='open').length>=MAX_OPEN_TASKS)fail(409,'task_limit',`Aynı anda en fazla ${MAX_OPEN_TASKS} açık görevin olabilir.`);
+        const t={id:'t-'+id(),posterId:user.id,title,scope,duration,acceptance,reward,status:'open',createdAt:now()};
+        d.tasks.push(t);
+        d.escrow.push({id:id(),taskId:t.id,posterId:user.id,amount:reward*100,status:'held',createdAt:now(),testMode:true});
+        audit(d,user.id,'escrow.hold',t.id,{gross:reward,testMode:true});
+        return {task:taskContract(t)};
+      });
+    }],
+
+    ['GET','/api/me/tasks',({user})=>{need(user);return {tasks:db.data.tasks.filter(t=>t.posterId===user.id).sort((a,b)=>b.createdAt.localeCompare(a.createdAt)).map(t=>{const e=db.data.escrow.find(e=>e.taskId===t.id);const subs=db.data.submissions.filter(s=>s.missionId===t.id);return {id:t.id,title:t.title,reward:t.reward,status:t.status,escrow:e.status,commission:e.commission!=null?e.commission/100:null,net:e.net!=null?e.net/100:null,submissions:subs.length,pending:subs.filter(s=>['submitted','appealed','revision'].includes(s.status)).length}})}}],
+
+    ['POST','/api/tasks/:id/cancel',({user,params})=>{
+      need(user);
+      return db.tx(d=>{
+        const t=d.tasks.find(t=>t.id===params.id&&t.posterId===user.id)||fail(404,'not_found','Görev bulunamadı.');
+        if(t.status!=='open')fail(409,'not_cancellable','Bu görev artık iptal edilemez.');
+        if(d.submissions.some(s=>s.missionId===t.id&&['submitted','appealed','revision'].includes(s.status)))fail(409,'has_pending','İncelemede bekleyen teslim varken iptal edilemez; önce sonuçlanmasını bekle.');
+        const e=d.escrow.find(e=>e.taskId===t.id&&e.status==='held');
+        Object.assign(e,{status:'refunded',refundedAt:now()});t.status='cancelled';
+        audit(d,user.id,'escrow.refund',t.id,{gross:e.amount/100,testMode:true});
+        return {ok:true,refunded:e.amount/100};
+      });
+    }],
+
+    // Herkese açık, anonim emanet defteri: açık kaynak güven modelinin görünür kısmı.
+    ['GET','/api/ledger',()=>({testMode:true,commissionPct,entries:db.data.auditLog.filter(a=>a.action.startsWith('escrow.')).slice(-50).reverse().map(a=>({at:a.at,type:a.action.slice(7),task:db.data.tasks.find(t=>t.id===a.target)?.title||a.target,gross:a.detail.gross,commission:a.detail.commission,net:a.detail.net}))})],
 
     ['GET','/api/admin/users',({user})=>{need(user,'admin');return {users:db.data.users.map(u=>({...publicUser(u),xp:xpOf(u.id)}))}}],
 
