@@ -1,0 +1,1 @@
+{"name":"scola","version":"0.3.0","private":true,"description":"Scola youth learning and production platform prototype","scripts":{"dev":"node scripts/server.mjs","start":"node scripts/server.mjs","test":"node tests/smoke.cjs","check":"node --check dist/assets/scola.js"},"engines":{"node":">=18"}}
