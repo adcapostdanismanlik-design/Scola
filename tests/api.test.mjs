@@ -169,6 +169,12 @@ try{
   // Yeni alan görevleri sözleşmede
   assert(['art-reading','culture-story','trade-pitch','game-idea','music-listen'].every(id=>ms.missions.some(m=>m.id===id&&m.acceptance.length===3)));
 
+  // Canlı nabız: anonim, kimlik sızdırmaz
+  const pulse=await anon('GET','/api/pulse');
+  assert(pulse.users>=3&&pulse.events.length>0&&pulse.surveys>=3);
+  assert(pulse.events.some(e=>e.kind==='paid')&&pulse.events.some(e=>e.kind==='task'));
+  const pj=JSON.stringify(pulse);assert(!pj.includes('ayse@')&&!pj.includes(a.user.id)&&!pj.includes('Ayşe'));
+
   // CSRF / içerik türü
   assert.equal((await fetch(base+'/api/auth/logout',{method:'POST'})).status,415);
   assert.equal((await fetch(base+'/api/auth/logout',{method:'POST',headers:{'content-type':'application/json',origin:'https://kotu.example'},body:'{}'})).status,403);

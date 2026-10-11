@@ -59,6 +59,14 @@ Sunucuyla açıldığında (`npm run dev`) çalışır; dosya olarak açılırsa
 - Yöneticiler ham yanıtları görür ve CSV indirir (formül enjeksiyonuna karşı hücreler güvenli hazırlanır). Yanıt verileri `data/` altında, depo dışındadır.
 - Reşit olmayanlar için: yaş yalnız aralık olarak alınır. Gerçek yayında açık rıza metni, veli bilgilendirmesi ve saklama süresi (KVKK) hukuken gözden geçirilmelidir.
 
+### Yaşayan arayüz (`dist/assets/fun.js`)
+
+- **Şu an Scola'da** paneli (ana sayfa): üye, açık görev, test emaneti, kabul edilen katkı ve anket sayacı; 8 saniyede bir yenilenen anonim olay akışı (`/api/pulse`, kişi kimliği içermez).
+- **Keşif çarkı**: dönen çark bir alan seçer ve o alandan bir görev önerir.
+- **Maskot**: gözler imleci izler, sayfaya göre ipucu balonu çıkar.
+- XP kazanınca yüzen "+N XP", seviye atlayınca kutlama; kartlarda imleçle eğim, kademeli giriş, dönen hero kelimesi, kıvılcım patlamaları, paralaks.
+- `prefers-reduced-motion` açıkken tüm hareketler kapanır (çark sonucu anında verir, otomatik balon çıkmaz). Bu katman yalnız süstür; XP, ödeme veya hak kararı vermez.
+
 ## Çalışan özellikler (demo)
 
 - Altı bölüm: keşif, görev meydanı, akademi, üretim alanı, topluluk, etki ve destek.

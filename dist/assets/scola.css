@@ -3,3 +3,42 @@
 #accountButton{white-space:nowrap;flex-shrink:0}
 
 .survey-area{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}.survey-area strong{font-size:12px}.survey-bar{padding:10px 0}.survey-bar small{color:var(--muted);font-size:10px}.survey-bar .progress-track{margin-top:7px}@media(max-width:740px){.survey-area{grid-template-columns:1fr;gap:6px;padding:14px 0}}
+
+/* ---- Canlı arayüz katmanı (fun.js) ---- */
+.hero-art svg{translate:calc(var(--px,0)*14px) calc(var(--py,0)*9px);transition:translate .25s ease-out}
+.spark{position:fixed;pointer-events:none;z-index:60;line-height:1;will-change:transform}
+.mission-grid>[style*="--i"],.course-grid>[style*="--i"],.card-grid>[style*="--i"],.community-grid>[style*="--i"],.path-strip>[style*="--i"],.fund-grid>[style*="--i"]{animation:enter .5s backwards;animation-delay:calc(var(--i)*55ms)}
+.mission-card,.course-card{will-change:transform;transition:transform .15s ease-out,border .2s,box-shadow .2s}
+.mission-card:hover,.course-card:hover{box-shadow:0 12px 28px #5a3e8a1c}
+nav a:hover>span{animation:wiggle .55s ease}
+.logo:hover .logo-mark{animation:wiggle .6s ease}
+@keyframes wiggle{20%{transform:rotate(-14deg) scale(1.15)}50%{transform:rotate(10deg) scale(1.1)}80%{transform:rotate(-5deg)}}
+.btn.lime{box-shadow:0 0 0 0 #d8f59e88;animation:glow 3.2s infinite}
+@keyframes glow{60%{box-shadow:0 0 0 0 #d8f59e88}85%{box-shadow:0 0 0 9px #d8f59e00}}
+.page-intro.has-wheel{flex-wrap:wrap}.page-intro.has-wheel>.btn{margin-left:auto}.page-intro.has-wheel>.btn+.btn{margin-left:0}
+.helper-bubble{position:absolute;right:62px;bottom:10px;width:max-content;max-width:210px;background:#fff;color:#5d4a73;border:1px solid #e3d6f0;border-radius:14px 14px 4px 14px;padding:10px 13px;font-size:11px;line-height:1.5;text-align:left;box-shadow:0 8px 24px #382b4b22;opacity:0;transform:translateY(8px) scale(.92);transform-origin:bottom right;transition:opacity .25s,transform .25s;pointer-events:none}
+.helper-bubble.show{opacity:1;transform:none;pointer-events:auto;cursor:pointer}
+/* canlı panel */
+.live-panel{background:linear-gradient(135deg,#2f2742,#3d3156);color:#f0e8fb;border-radius:16px;padding:20px 22px;margin:0 0 20px;position:relative;overflow:hidden}
+.live-head{display:flex;align-items:center;gap:8px;font-size:13px}.live-head small{margin-left:auto;font-size:9px;color:#a99bc0}
+.live-head .pulse-signal{background:#d7eca9;box-shadow:0 0 0 4px #d7eca933;animation:pulse 1.6s infinite}
+.live-stats{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:16px 0}
+.live-stat{background:#ffffff12;border:1px solid #ffffff1c;border-radius:11px;padding:12px 10px;text-align:center}
+.live-stat b{display:block;font-size:22px;letter-spacing:-.8px;color:#e1faad;font-variant-numeric:tabular-nums}.live-stat span{font-size:9px;color:#b9abcf}
+.live-feed{list-style:none;margin:0;padding:0;display:grid;gap:7px}
+.live-ev,.live-empty{display:flex;align-items:center;gap:10px;font-size:11px;background:#ffffff0d;border-radius:9px;padding:9px 11px}
+.live-ev i{font-style:normal;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:11px;background:#c5a5e9;color:#2f2742;flex-shrink:0;font-weight:800}
+.live-ev.ev-paid i{background:#d7eca9}.live-ev.ev-task i{background:#efb28e}.live-ev.ev-accept i{background:#f2d58a}
+.live-ev small{margin-left:auto;color:#a99bc0;font-size:9px;white-space:nowrap}.live-ev span{min-width:0}
+.live-ev.fresh{animation:slidein .6s cubic-bezier(.2,.8,.2,1)}
+.live-empty .text-btn{color:#e1faad;margin-left:auto}
+@keyframes slidein{from{opacity:0;transform:translateY(-14px) scale(.97);background:#d7eca944}}
+@media(max-width:740px){.live-stats{grid-template-columns:repeat(2,1fr)}.live-stat:last-child{grid-column:1/-1}.live-head small{display:none}}
+/* xp */
+.xp-float{position:fixed;left:50%;top:38%;z-index:70;pointer-events:none;background:#d7eca9;color:#374927;font-weight:800;font-size:22px;padding:8px 20px;border-radius:30px;box-shadow:0 8px 28px #5a7d3a44}
+/* çark */
+.wheel-wrap{position:relative;width:min(300px,78vw);margin:18px auto}
+.wheel-pointer{position:absolute;left:50%;top:-14px;transform:translateX(-50%);font-size:24px;color:#40354e;z-index:2;filter:drop-shadow(0 2px 2px #0003)}
+.wheel-svg{width:100%;height:auto;display:block;filter:drop-shadow(0 8px 18px #43306a30)}
+.wheel-result{text-align:center;animation:enter .4s}.wheel-result strong{font-size:18px}
+@media(prefers-reduced-motion:reduce){.btn.lime{animation:none}.hero-art svg{translate:none;transition:none}.live-ev.fresh{animation:none}}

@@ -266,6 +266,23 @@ export function createApi({dbFile=null,adminEmails=[],secureCookie=false,commiss
         siteRating:{n:ratings.length,avg:avg(ratings)}};
     }],
 
+    // Canlı nabız: yalnız anonim sayaçlar ve son olay başlıkları; kişi kimliği içermez.
+    ['GET','/api/pulse',()=>{
+      const D=db.data,title=cid=>contract(cid)?.title||'bir görev';
+      const events=[];
+      for(const a of D.auditLog.slice(-60).reverse()){
+        let kind=null,text=null;
+        if(a.action==='escrow.hold'){kind='task';text='Yeni görev açıldı: '+(D.tasks.find(t=>t.id===a.target)?.title||'görev')+' · '+a.detail.gross+' ₺ test emanetinde'}
+        else if(a.action==='escrow.release'){kind='paid';text='Ödeme serbest kaldı (test): '+(D.tasks.find(t=>t.id===a.target)?.title||'görev')}
+        else if(a.action==='submission.create'){kind='submit';text='Yeni bir teslim geldi: '+title(a.detail.missionId)}
+        else if(a.action==='review.accept'){const sub=D.submissions.find(x=>x.id===a.target);if(sub&&!contract(sub.missionId)?.community){kind='accept';text='Bir katkı kabul edildi: '+title(sub.missionId)}}
+        if(kind)events.push({at:a.at,kind,text});
+        if(events.length>=10)break;
+      }
+      return {users:D.users.length,openTasks:D.tasks.filter(t=>t.status==='open').length,heldTL:D.escrow.filter(e=>e.status==='held').reduce((t,e)=>t+e.amount,0)/100,
+        submissions:D.submissions.length,accepted:D.submissions.filter(x=>x.status==='accepted').length,surveys:D.surveys.length,events};
+    }],
+
     ['GET','/api/admin/survey',({user})=>{need(user,'admin');return {responses:db.data.surveys.map(({userId,...r})=>r)}}],
 
     ['GET','/api/admin/users',({user})=>{need(user,'admin');return {users:db.data.users.map(u=>({...publicUser(u),xp:xpOf(u.id)}))}}],
