@@ -1,0 +1,52 @@
+/* Scola — sade, çizgisel arayüz. En son yüklenir; renkli 3B Meydan dünyasına dokunmaz. */
+:root{--ink:#23202f;--line:#23202f;--accent:#6c4bd6;--lime:#e1faad;--paper:#fff;--soft:#f7f6fb}
+body{background:var(--paper);color:var(--ink)}
+*{box-shadow:none!important;text-shadow:none!important}
+.sidebar{background:var(--paper)!important;color:var(--ink)!important;border-right:2px solid var(--line)}
+.logo{display:flex;align-items:center;gap:8px;color:var(--ink);text-decoration:none;font-weight:800;font-size:26px}
+.logo-bird{width:44px;height:44px;flex:none}
+.logo:hover .bk-head{animation:peck .5s ease-in-out 2;transform-origin:63px 50px}
+@keyframes peck{50%{transform:translateX(5px) rotate(8deg)}}
+.logo-dot{color:var(--accent)}
+nav#nav{position:relative;display:flex;flex-direction:column;gap:6px;margin:26px 0 0 14px;padding-left:22px;border-left:2px solid var(--line)}
+nav#nav a{position:relative;display:block;padding:9px 12px;border:0;border-radius:10px;background:none!important;color:var(--ink)!important;font-weight:600;text-decoration:none}
+nav#nav a::before{content:"";position:absolute;left:-29px;top:50%;width:12px;height:12px;margin-top:-6px;border:2px solid var(--line);border-radius:50%;background:var(--paper)}
+nav#nav a.active{font-weight:800}
+nav#nav a.active::before{background:var(--accent);border-color:var(--accent)}
+nav#nav a:hover{text-decoration:underline;text-underline-offset:5px}
+.user-profile{background:none!important;border:2px solid var(--line);border-radius:14px;color:var(--ink)!important}
+.user-profile small{color:#5d5870}
+.avatar{background:var(--lime)!important;color:var(--ink)!important;border:2px solid var(--line)}
+.topbar{background:var(--paper)!important;border-bottom:2px solid var(--line)}
+.topbar .search,.icon-btn{border:2px solid var(--line);background:var(--paper)}
+.btn,.btn.light,.btn.purple,.btn.lime{background:var(--paper)!important;color:var(--ink)!important;border:2px solid var(--line)!important;border-radius:999px}
+.btn.lime,.btn.purple{background:var(--lime)!important}
+.btn:hover{background:var(--accent)!important;color:#fff!important}
+.hero,.panel,.card,.mission-card,.course-card,.notice,.first-timer,.path-item,.level-card,.mk-card,.mk-order,.lg-card,.empty,.result{background:var(--paper)!important;border:2px solid var(--line)!important;border-radius:18px;color:var(--ink)!important;background-image:none!important}
+.hero{display:grid;grid-template-columns:1fr 200px;align-items:center;gap:20px;padding:28px}
+.hero h2,.hero p,.hero .eyebrow{color:var(--ink)!important}
+.hero em{font-style:normal;background:linear-gradient(transparent 62%,var(--lime) 62%)}
+.hero-bird{width:200px;max-width:100%}
+.hero-art,.art-label,.orbit-shape,.sidebar-callout,.space-name,.course-cover,.course-art,.mk-cover svg{display:none!important}
+.mk-cover{background:var(--soft)!important;border:0;border-bottom:2px solid var(--line)}
+.eyebrow{color:var(--accent)!important;letter-spacing:.12em}
+.lg-fold{margin:0 0 18px;border:2px solid var(--line);border-radius:18px;padding:10px 16px}
+.lg-fold>summary{cursor:pointer;font-weight:700}
+.helper-button{background:var(--paper)!important;border:2px solid var(--line)!important}
+.helper-button svg{width:34px;height:34px}
+.helper-card,.helper-panel{background:var(--paper)!important;border:2px solid var(--line)!important;color:var(--ink)!important}
+footer{border-top:2px solid var(--line);display:flex;flex-wrap:wrap;gap:12px 24px;justify-content:space-between;padding:18px 24px}
+.foot-links{display:flex;flex-wrap:wrap;gap:6px 18px}
+.foot-links a,.foot-links button{color:var(--ink);background:none;border:0;font:inherit;text-decoration:underline;text-underline-offset:4px;cursor:pointer}
+.mk-controls{display:flex;gap:10px}
+.mk-controls .input{flex:1}
+@media (max-width:760px){.hero{grid-template-columns:1fr}.hero-bird{width:130px}nav#nav{margin-left:10px}}
+@media (prefers-reduced-motion:reduce){.logo:hover .bk-head{animation:none}}
+nav#nav a[hidden]{display:none!important}
+.logo-bird{width:56px;height:56px}
+.logo-word{font-size:28px}
+.hero{min-height:0}
+.live-panel{background:var(--paper)!important;color:var(--ink)!important;border:2px solid var(--line);background-image:none!important}
+.live-stat,.live-ev,.live-empty{background:var(--paper)!important;border:2px solid var(--line)!important;color:var(--ink)!important}
+.live-stat b,.live-panel a,.live-panel .text-btn{color:var(--accent)!important}
+.live-head small{color:#5d5870!important}
