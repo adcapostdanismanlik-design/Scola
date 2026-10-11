@@ -12,6 +12,10 @@
 - Sunucuda idempotent XP defteri; istemci puanı hak kazandırmasın.
 - LocalStorage verisini kullanıcının onayıyla içe aktarma; demo XP'yi doğrulanmış XP'ye çevirmeme.
 
+## Gelişim sistemi (v0.8)
+
+Tohum → Fidan → Ağaç → Orman ve mentörlük çalışıyor (bkz. PRODUCT_MODEL.md). Kalan: eşiklerin pilot verisiyle dengelenmesi, mentörlük mesajlaşması için moderasyonlu kanal, etkinlik dışı Ağaçlar için "dinlenme" durumu, kimlik doğrulama ve veli onayı.
+
 ## Aşama 2 — İnsanlardan eğitim
 
 - Course, Lesson, Enrollment, LearningOutput, TeacherReview.

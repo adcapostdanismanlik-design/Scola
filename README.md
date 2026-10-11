@@ -73,6 +73,15 @@ Sunucuyla açıldığında (`npm run dev`) çalışır; dosya olarak açılırsa
 - XP kazanınca yüzen "+N XP", seviye atlayınca kutlama; kartlarda imleçle eğim, kademeli giriş, dönen hero kelimesi, kıvılcım patlamaları, paralaks.
 - `prefers-reduced-motion` açıkken tüm hareketler kapanır (çark sonucu anında verir, otomatik balon çıkmaz). Bu katman yalnız süstür; XP, ödeme veya hak kararı vermez.
 
+### Gelişim sistemi: Tohum → Fidan → Ağaç → Orman (v0.8)
+
+- Sitenin Level sistemi oyundan **bağımsızdır** (ayrıntı: PRODUCT_MODEL.md). Hesap `dist/assets/growth.js` ile hem sunucuda (doğrulanmış) hem tarayıcıda (demo gösterimi) yapılır; kenar çubuğu, ana sayfa kartı ve "Aşamalar nasıl işler?" penceresi bunu kullanır.
+- **Gelişim yolum** sayfası: aşama yolu, sıradaki adımın gereksinim çubukları, başlangıç rotası, mentör dizini ve talebi, mentörlük notları (puan vermez), çırak mentörlük, Ağaç adaylığı ve kör bağımsız değerlendirme kuyruğu, Ormanlar ve metrikleri.
+- Sunucu: `server/growth.mjs`. Uç noktalar: `/api/me/growth`, `/api/me/route`, `/api/mentors`, `/api/mentorships`, `/api/tree-applications`, `/api/forests`, `/api/admin/users/:id/founding-tree`. Aşama olayları ve yönetici işlemleri denetim kaydına yazılır.
+- Testler: `tests/growth.test.mjs` (eşikler, zaman, oyundan bağımsızlık, kapasite, bağımsız değerlendirme, Orman). Tarayıcıda tam akış (Tohum → Fidan başvurusu → iki bağımsız Ağaç onayı → Orman) betikle doğrulandı; zaman şartları geriye çekilmiş kayıtlarla hazırlandı.
+- İlk Ağaçlar için yönetici, "Bağımsız inceleme" sayfasından **Kurucu Ağaç** atar.
+- Sınırlar: eşikler pilot hipotezidir; Ağaçlar etkinlik dışı kalınca düşmez (ceza yok); sahte hesap halkasına karşı çırak mentörlüğün gerçek öğrenci katkısı şartı ve kör değerlendirme var ama kimlik doğrulama yoktur; mentörlük mesajlaşması yok (yalnız notlar).
+
 ### Scola Meydanı 3B (v0.7)
 
 - **3B dünya (Three.js r170, MIT, `dist/assets/vendor/` içinde, internetsiz çalışır):** alçak poligonlu pastel stil, gerçek 3B binalar / ağaçlar / çeşme / portal / sandık, gündün-gece döngüsü (7 dk; gece pencereler yanar), bulutlar, 3B karakterler (yürüme, el sallama, dans emojileri), isim etiketi ve konuşma balonu. Kamera: fareyle sürükle / parmakla sürükle, tekerlek veya çimdikle yakınlaştır; WASD kameraya göre yürütür. Kamera engel arkasına geçince yaklaşır, bir binanın üstündeyken o bina kesit olarak gizlenir.

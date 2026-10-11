@@ -16,13 +16,18 @@ Başlangıç: 10–20 dakikalık kontrollü görevler. Tekrarlanabilir hata rapo
 2. Alan itibarı: örneğin test, tasarım, eğitim. Bağımsız kalite, işe yarayan geri bildirim, katkı sürekliliği. Her alanda aynı uzmanlık varsayılmaz.
 3. Proje hazırlığı: prototip, ihtiyaç, maliyet, ekip ve katkı kanıtı. İnsanların parasal değeri değildir.
 
-## Seviye ve görünürlük
+## Gelişim sistemi: Tohum → Fidan → Ağaç → Orman
 
-6 örnek seviye: Meraklı 0, Kaşif 100, Üretici 250, Paylaşan 500, Birleştirici 850, Öncü 1300 XP. Eşikler pilotta dengelenecek ürün hipotezleridir.
+Sitenin Level sistemi **oyundan (Meydan, damgalar) bağımsızdır**. Yalnız bağımsız incelemede kabul edilen katkılar, zaman ve mentörlük kayıtları sayılır; takipçi, para harcama, ziyaret süresi, kendi kendine tamamlama ve oyun etkinliği sayılmaz. Tek doğruluk kaynağı `dist/assets/growth.js`'tir (sunucu ve tarayıcı aynı dosyayı kullanır). Eşikler **pilot hipotezidir**.
 
-Etki alanı; konuya göre eğitmen önerisi, katkı vitrini, ekip liderliği adaylığı, mentorluk ve topluluk temsilciliği biçiminde büyür. Seviye otomatik uzmanlık veya karar tekeli yaratmaz.
+1. **🌰 Tohum:** başlangıç. Rota belirlenir (en fazla 2 alan + hedef; kilometre taşları doğrulanmış katkıdan ölçülür), isteyen bir mentör ister. Mentör şart değildir; mentörsüz yeni başlayan engellenmez.
+2. **🌱 Fidan:** otomatik ve ölçülebilir yetkinlikle gelir: 200 XP, 3 kabul edilen katkı, 2 farklı alan, %60 kabul oranı (en az 3 karar), 7 günlük hesap. Bir kez Fidan olan geri düşmez. Fidan, çırak mentör olarak başkalarının yetişmesini izler.
+3. **🌳 Ağaç ("Mentörler Birliği"):** sayılar tek başına yetmez. 700 XP, 8 kabul, 3 alan, %70 oran, 45 gün, en az 14 gün süren çırak mentörlük (öğrencisi o sürede gerçek bir kabul edilen katkı üretmiş olmalı) ve **iki bağımsız Ağaç**ın dört ölçütlü rubrikle onayı. Değerlendirme kördür; mentörlük bağı olan, çıkar çatışması beyan eden ve yakın zamanda karşılıklı onay vermiş kişiler değerlendiremez; bölünürse üçüncü Ağaç karar verir. Reddedilirse 30 gün sonra yeniden başvurulur. Ağaç, yeni tohumlara mentörlük eder (aynı anda en çok 5 öğrenci; tükenmişliği önler).
+4. **🌲 Orman (topluluk):** kişisel seviye değil, en az 3 Ağacın kurduğu topluluktur (bir Ağaç en çok 2 ormanda). Metrikler: ağaç sayısı, barınan tohum, yetişen Fidan / Ağaç, son 30 günde aktif öğrenci oranı, en yüklü mentör, kapsanan alanlar. Durum: Filiz (<3 ağaç) / Gelişen / Sağlıklı (barınma, bağlılık ve yük dengesi). **Kişiler sıralanmaz, puanlanmaz, insanlara değer biçilmez.**
 
-Önerilen keşif ağırlıkları: %40 kalite, %25 konu uyumu, %20 yeni üretici keşfi, %15 güncellik. Henüz uygulanmayan deneysel modeldir; gerçek sistemde içerik güvenliği ve kullanıcı tercihi gerekir. Düşük seviyeli kaliteli katkılar görünür kalır.
+İlk Ağaçlar yokken **Kurucu Ağaç** yöneticice atanır (kayıtlı, şeffaf, geçici bir önyükleme; zamanla topluluğun yetiştirdiği Ağaçlar yerini alır). Hiçbir aşama eğitim açmanın, proje kurmanın, büyük işlere deneme başvurusunun ya da fon başvurusunun ön koşulu değildir. Meydan damgaları (İlk Adım, Sosyal Kelebek, Ada Kaşifi…) eğlence ve sosyal keşif içindir, seviyeyi etkilemez.
+
+Önerilen keşif ağırlıkları: %40 kalite, %25 konu uyumu, %20 yeni üretici keşfi, %15 güncellik. Henüz uygulanmayan deneysel modeldir; gerçek sistemde içerik güvenliği ve kullanıcı tercihi gerekir. Düşük aşamalı kaliteli katkılar görünür kalır.
 
 ## Eğitim veren kullanıcılar
 

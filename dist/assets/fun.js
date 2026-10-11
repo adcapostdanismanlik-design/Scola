@@ -58,7 +58,7 @@ setInterval(tick,8000);
 
 /* ---------- XP geri bildirimi ---------- */
 function floatXp(n){if(!(n>0))return;const el=document.createElement('div');el.className='xp-float';el.textContent='+'+n+' XP';document.body.appendChild(el);if(calm){setTimeout(()=>el.remove(),1600);return}el.animate([{transform:'translate(-50%,10px) scale(.7)',opacity:0},{transform:'translate(-50%,-10px) scale(1.15)',opacity:1,offset:.25},{transform:'translate(-50%,-70px) scale(1)',opacity:0}],{duration:1500,easing:'ease-out'}).onfinish=()=>el.remove()}
-const _refresh=refreshLive;refreshLive=async function(){const prev=live.user?.id,xp0=live.xp,lv0=liveLevel();await _refresh();if(live.user&&live.user.id===prev&&live.xp>xp0){floatXp(live.xp-xp0);if(liveLevel()>lv0){celebrate();toast('Yeni seviye: '+levelMap[liveLevel()].name+' 🎉')}}};
+const _refresh=refreshLive;refreshLive=async function(){const prev=live.user?.id,xp0=live.xp,st0=live.stage;await _refresh();if(live.user&&live.user.id===prev){if(live.xp>xp0)floatXp(live.xp-xp0);if(st0&&live.stage&&live.stage!==st0){celebrate();toast('Yeni aşama: '+live.stageEmoji+' '+live.stageName+' 🎉')}}};
 const _award=award;award=function(key,points){const ok=_award(key,points);if(ok)floatXp(points);return ok};
 
 /* ---------- Alan çarkı ---------- */

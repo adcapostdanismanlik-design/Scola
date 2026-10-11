@@ -5,6 +5,7 @@ import {randomBytes,scryptSync,timingSafeEqual,createHash} from 'node:crypto';
 import {openDb} from './db.mjs';
 import {missions,missionById} from './missions.mjs';
 import {createHub,MAPS} from './hub.mjs';
+import {createGrowth} from './growth.mjs';
 
 const AGE_BANDS=['13-15','16-17','18-24','25+'],AREAS=['art','culture','music','game','trade','tech','craft','content'],HOURS=['0-1','2-4','5-8','9+'],ROLES=['do','post','teach','team'],SURVEY_PER_HOUR=10,TASK_XP=100,MIN_REWARD=50,MAX_REWARD=5000,MAX_OPEN_TASKS=5,SESSION_DAYS=14,MAX_BODY=64*1024,FEEDBACK_MIN=40,RING_DAYS=30;
 const now=()=>new Date().toISOString();
@@ -19,7 +20,7 @@ function checkPassword(pw,stored){const [,salt,hash]=String(stored).split('$');i
 
 const str=(v,min,max,label)=>{const s=typeof v==='string'?v.trim():'';if(s.length<min||s.length>max)fail(400,'invalid_'+label,`${label}: ${min}–${max} karakter olmalı.`);return s};
 
-export function createApi({dbFile=null,adminEmails=[],secureCookie=false,commissionPct=10}={}){
+export function createApi({dbFile=null,adminEmails=[],secureCookie=false,commissionPct=10,clock=Date.now}={}){
   const db=openDb(dbFile);
   // TEST MODU: gerçek para hareketi yok. Emanet defteri, ödeme sağlayıcısı bağlandığında
   // onun bloke/serbest bırakma çağrılarının yerini alacak sunucu tarafı kayıttır.
@@ -50,6 +51,7 @@ export function createApi({dbFile=null,adminEmails=[],secureCookie=false,commiss
   }
   const need=(user,role)=>{if(!user)fail(401,'auth_required','Önce giriş yap.');if(role&&!user.roles.includes(role))fail(403,'forbidden','Bu işlem için yetkin yok.');return user};
 
+  const growth=createGrowth({db,need,fail,str,id,now,audit,contract,clock});
   const submissionView=(s,{forAuthor=false}={})=>{
     const m=contract(s.missionId);
     const reviews=db.data.reviews.filter(r=>r.submissionId===s.id).map(r=>({id:r.id,decision:r.decision,checks:r.checks,feedback:r.feedback,createdAt:r.createdAt,reviewer:forAuthor?'Bağımsız değerlendirici':r.reviewerId}));
@@ -108,7 +110,9 @@ export function createApi({dbFile=null,adminEmails=[],secureCookie=false,commiss
       if(!user)return {user:null};
       const subs=db.data.submissions.filter(s=>s.userId===user.id);
       const earned=db.data.escrow.filter(e=>e.status==='released'&&e.payeeId===user.id).reduce((t,e)=>t+e.net,0),held=db.data.escrow.filter(e=>e.status==='held'&&e.posterId===user.id).reduce((t,e)=>t+e.amount,0);
-      return {user:publicUser(user),xp:xpOf(user.id),accepted:subs.filter(s=>s.status==='accepted').length,pending:subs.filter(s=>['submitted','appealed'].includes(s.status)).length,earned:earned/100,held:held/100,testMode:true};
+      const stg=growth.stageOf(db.data,user),meta=growth.STAGES.find(x=>x.id===stg);
+      const qk=growth.quick(db.data,user);
+      return {stage:stg,stageName:meta.name,stageEmoji:meta.emoji,stageProgress:qk.progress,nextStage:qk.next,user:publicUser(user),xp:xpOf(user.id),accepted:subs.filter(s=>s.status==='accepted').length,pending:subs.filter(s=>['submitted','appealed'].includes(s.status)).length,earned:earned/100,held:held/100,testMode:true};
     }],
 
     ['GET','/api/missions',({user})=>({missions:missions.map(m=>{
@@ -189,6 +193,7 @@ export function createApi({dbFile=null,adminEmails=[],secureCookie=false,commiss
           const key=`mission:${m.id}:${s.userId}`;
           if(!d.xpEvents.some(e=>e.key===key)){d.xpEvents.push({id:id(),key,userId:s.userId,points:m.xp,sourceType:'submission',sourceId:s.id,reviewId:review.id,createdAt:now()});xpAwarded=m.xp}
         }
+        if(decision==='accept'){const mentee=d.users.find(x=>x.id===s.userId);if(mentee)growth.syncStage(d,mentee)}
         let payout=null;
         if(decision==='accept'&&m.community){
           const t=d.tasks.find(t=>t.id===m.id),e=d.escrow.find(e=>e.taskId===t.id&&e.status==='held');
@@ -281,7 +286,7 @@ export function createApi({dbFile=null,adminEmails=[],secureCookie=false,commiss
         if(kind)events.push({at:a.at,kind,text});
         if(events.length>=10)break;
       }
-      return {hubOnline:hub.counts().total,users:D.users.length,openTasks:D.tasks.filter(t=>t.status==='open').length,heldTL:D.escrow.filter(e=>e.status==='held').reduce((t,e)=>t+e.amount,0)/100,
+      return {hubOnline:hub.counts().total,stages:growth.counts(D),users:D.users.length,openTasks:D.tasks.filter(t=>t.status==='open').length,heldTL:D.escrow.filter(e=>e.status==='held').reduce((t,e)=>t+e.amount,0)/100,
         submissions:D.submissions.length,accepted:D.submissions.filter(x=>x.status==='accepted').length,surveys:D.surveys.length,events};
     }],
 
@@ -293,9 +298,11 @@ export function createApi({dbFile=null,adminEmails=[],secureCookie=false,commiss
     ['POST','/api/hub/report',({body})=>hub.report(String(body.tok||''),String(body.target||''),body.reason)],
     ['GET','/api/admin/hub-reports',({user})=>{need(user,'admin');return {reports:(db.data.hubReports||[]).slice().reverse()}}],
 
+    ...growth.routes,
+
     ['GET','/api/admin/survey',({user})=>{need(user,'admin');return {responses:db.data.surveys.map(({userId,...r})=>r)}}],
 
-    ['GET','/api/admin/users',({user})=>{need(user,'admin');return {users:db.data.users.map(u=>({...publicUser(u),xp:xpOf(u.id)}))}}],
+    ['GET','/api/admin/users',({user})=>{need(user,'admin');return {users:db.data.users.map(u=>({...publicUser(u),xp:xpOf(u.id),stage:growth.stageOf(db.data,u),founding:!!u.foundingTree}))}}],
 
     ['POST','/api/admin/users/:id/roles',({user,params,body})=>{
       need(user,'admin');
