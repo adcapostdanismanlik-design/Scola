@@ -1,1 +1,16 @@
-{"name":"scola","version":"1.1.0","private":true,"description":"Scola youth learning and production platform prototype","scripts":{"dev":"node scripts/server.mjs","start":"node scripts/server.mjs","test":"node tests/smoke.cjs && node tests/api.test.mjs && node tests/hub.test.mjs && node tests/hub-rooms.test.mjs && node tests/growth.test.mjs && node tests/market.test.mjs","check":"node --check dist/assets/scola.js && node --check dist/assets/mascot.js && node --check dist/assets/fun.js && node --check dist/assets/hub.js && node --check dist/assets/hub3d.js && node --check dist/assets/growth.js && node --check dist/assets/growth-ui.js && node --check dist/assets/courses.js && node --check dist/assets/learn-game.js && node --check dist/assets/market-ui.js && node --check server/market.mjs && node --check server/growth.mjs && node --check server/hub.mjs && node --check server/app.mjs && node --check server/db.mjs && node --check server/missions.mjs && node --check scripts/server.mjs && node --check scripts/seed-demo.mjs","seed":"node scripts/seed-demo.mjs"},"engines":{"node":">=18"}}
+{
+  "name": "scola",
+  "version": "1.1.0",
+  "private": true,
+  "description": "Scola youth learning and production platform prototype",
+  "scripts": {
+    "dev": "node scripts/server.mjs",
+    "start": "node scripts/server.mjs",
+    "test": "node tests/smoke.cjs && node tests/api.test.mjs && node tests/hub.test.mjs && node tests/hub-rooms.test.mjs && node tests/growth.test.mjs && node tests/market.test.mjs",
+    "check": "node --check dist/assets/scola.js && node --check dist/assets/mascot.js && node --check dist/assets/alive.js && node --check dist/assets/fun.js && node --check dist/assets/hub.js && node --check dist/assets/hub3d.js && node --check dist/assets/growth.js && node --check dist/assets/growth-ui.js && node --check dist/assets/courses.js && node --check dist/assets/learn-game.js && node --check dist/assets/market-ui.js && node --check server/market.mjs && node --check server/growth.mjs && node --check server/hub.mjs && node --check server/app.mjs && node --check server/db.mjs && node --check server/missions.mjs && node --check scripts/server.mjs && node --check scripts/seed-demo.mjs",
+    "seed": "node scripts/seed-demo.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

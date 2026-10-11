@@ -186,3 +186,7 @@ Geliştirme paketi sır, erişim anahtarı, Git kimlik bilgisi veya özel kullan
 ## Ağaçkakan mascot'u
 
 `dist/assets/mascot.js` çizimi ve hareketleri tek kaynaktan üretir (`mascot.css` animasyonlar). Boşta nefes alır, göz kırpar, gözleri imleci izler; ara sıra gagalar, başını yatırır, kanat çırpar, zıplar. Tıklayınca gagalar, katkı kutlamasında sevinir. `prefers-reduced-motion` açıkken hareket tamamen kapanır. Hareketler süstür; XP ya da doğrulama anlamı taşımaz.
+
+## Yaşayan arayüz
+
+`alive.js` / `alive.css`: saate göre selamlama, günün küçük adımı (tarihe göre sabit, gerçek sayfalara yönlendirir), kademeli sayfa girişi, kart ve düğme dokunuş tepkileri, zeminde süzülen yapraklar, dönen arama ipuçları; menü tıklamasında ve bildirimlerde maskot gagalar. Hepsi süstür, hak ya da XP üretmez ve `prefers-reduced-motion` ile kapanır.
