@@ -22,6 +22,12 @@ Bu e-postayla hesap açan kişi yönetici + değerlendirici olur ve "Bağımsız
 
 Bağımlılık kurulumu gerekmez. Windows'ta BASLAT.bat da kullanılabilir. Hızlı inceleme için dist/index.html doğrudan açılabilir; kalıcı kayıt davranışı tarayıcıya göre değişebilir. Google Fonts yüklenmezse sistem yazı tipi kullanılır.
 
+## Sunum / yarışma günü
+
+- Yalnız bu bilgisayardan: `SCOLA_ADMIN_EMAILS=sen@ornek.com npm run dev`.
+- Yarışmacıların kendi cihazından görmesi için: `SCOLA_HOST=0.0.0.0` ekle ve aynı ağdan `http://<bilgisayarın-ip-adresi>:5175` adresini paylaş. Sunucu HTTPS sunmaz; internete açacaksan TLS sonlandıran bir ters vekil (ör. Caddy / Cloudflare Tunnel) arkasına koy ve `SCOLA_SECURE_COOKIE=1` kullan. Kimlik doğrulama ve veli onayı olmadan reşit olmayanların verisini herkese açık internette toplama.
+- Örnek hesap + görev: sunucu çalışırken `SCOLA_ADMIN_EMAILS=ornek-yonetici@ornek.test` ile başlat, başka bir terminalde `npm run seed`. Hesapları ve şifreleri ekrana yazar; anket veya teslim uydurmaz.
+
 ## Codex'e taşı
 
 1. ZIP'i örneğin `D:\Scola` klasörüne çıkar. `package.json` doğrudan bu klasörde olmalı.
