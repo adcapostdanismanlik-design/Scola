@@ -178,3 +178,7 @@ Geliştirme paketi sır, erişim anahtarı, Git kimlik bilgisi veya özel kullan
 
 - **Pazar (test modu, gerçek para yok):** ilanlar bağımsız değerlendiriciden geçer, ödeme emanette tutulur, teslim/onaydan sonra %8 komisyonla serbest bırakılır (`SCOLA_MARKET_COMMISSION_PCT`). Önerilen sıralama para, takipçi ya da satış sayısına bakmaz. `npm run seed` örnek ilanlar ekler.
 - **Eğitim oyunlaştırması:** yıldız, rozet, haftalık görevler ve günlük hızlı tur. Ceza ve sıralama yoktur; Gelişim (Tohum→Orman) seviyesinden bağımsızdır ve yalnızca demodur.
+
+## GitHub Pages (statik demo)
+
+`.github/workflows/pages.yml`, `dist/` klasörünü GitHub Pages'e yayınlar. Sunucu olmadığı için yalnızca yerel demo modu çalışır (hesap, Pazar, Meydan ve inceleme çalışmaz). Bir kez: Settings → Pages → Source: **GitHub Actions**. Workflow `main` dalına birleştirilince çalışır.

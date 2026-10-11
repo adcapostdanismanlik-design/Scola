@@ -10,7 +10,7 @@ const smooth=(a,b,x)=>{const t=clamp((x-a)/(b-a),0,1);return t*t*(3-2*t)};
 const EMOJI_FONT='"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';
 
 async function create(stage,opts={}){
-  let T;try{T=await import('/assets/vendor/three.module.min.js')}catch{return null}
+  let T;try{T=await import('./vendor/three.module.min.js')}catch{return null}
   const probe=document.createElement('canvas');if(!(probe.getContext('webgl2')||probe.getContext('webgl')))return null;
   const coarse=typeof matchMedia==='function'&&matchMedia('(pointer:coarse)').matches;
   const calm=typeof matchMedia==='function'&&matchMedia('(prefers-reduced-motion: reduce)').matches;
