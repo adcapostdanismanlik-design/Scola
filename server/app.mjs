@@ -4,6 +4,7 @@
 import {randomBytes,scryptSync,timingSafeEqual,createHash} from 'node:crypto';
 import {openDb} from './db.mjs';
 import {missions,missionById} from './missions.mjs';
+import {createHub,MAPS} from './hub.mjs';
 
 const AGE_BANDS=['13-15','16-17','18-24','25+'],AREAS=['art','culture','music','game','trade','tech','craft','content'],HOURS=['0-1','2-4','5-8','9+'],ROLES=['do','post','teach','team'],SURVEY_PER_HOUR=10,TASK_XP=100,MIN_REWARD=50,MAX_REWARD=5000,MAX_OPEN_TASKS=5,SESSION_DAYS=14,MAX_BODY=64*1024,FEEDBACK_MIN=40,RING_DAYS=30;
 const now=()=>new Date().toISOString();
@@ -29,9 +30,10 @@ export function createApi({dbFile=null,adminEmails=[],secureCookie=false,commiss
   const contract=cid=>missionById(cid)||(()=>{const t=db.data.tasks.find(t=>t.id===cid);return t?taskContract(t):null})();
   const admins=new Set(adminEmails.map(e=>e.trim().toLowerCase()).filter(Boolean));
   const loginFailures=new Map(),surveyHits=new Map();
+  const hub=createHub({db});
 
   const audit=(d,actor,action,target,detail={})=>d.auditLog.push({id:id(),at:now(),actor,action,target,detail});
-  const publicUser=u=>({id:u.id,name:u.name,email:u.email,interest:u.interest,roles:u.roles,createdAt:u.createdAt});
+  const publicUser=u=>({id:u.id,name:u.name,email:u.email,interest:u.interest,roles:u.roles,stamps:u.stamps||[],createdAt:u.createdAt});
   const xpOf=userId=>db.data.xpEvents.filter(e=>e.userId===userId).reduce((s,e)=>s+e.points,0);
   const applyAdminRole=(d,u)=>{if(admins.has(u.email)&&!u.roles.includes('admin')){u.roles.push('admin');if(!u.roles.includes('reviewer'))u.roles.push('reviewer');audit(d,'system','role.bootstrap',u.id,{roles:u.roles})}};
 
@@ -279,9 +281,17 @@ export function createApi({dbFile=null,adminEmails=[],secureCookie=false,commiss
         if(kind)events.push({at:a.at,kind,text});
         if(events.length>=10)break;
       }
-      return {users:D.users.length,openTasks:D.tasks.filter(t=>t.status==='open').length,heldTL:D.escrow.filter(e=>e.status==='held').reduce((t,e)=>t+e.amount,0)/100,
+      return {hubOnline:hub.counts().total,users:D.users.length,openTasks:D.tasks.filter(t=>t.status==='open').length,heldTL:D.escrow.filter(e=>e.status==='held').reduce((t,e)=>t+e.amount,0)/100,
         submissions:D.submissions.length,accepted:D.submissions.filter(x=>x.status==='accepted').length,surveys:D.surveys.length,events};
     }],
+
+    // ---- Meydan (hub) ----
+    ['GET','/api/hub/info',()=>hub.info()],
+    ['POST','/api/hub/input',({body})=>({ok:hub.input(String(body.tok||''),{dx:body.dx,dy:body.dy,tx:body.tx,ty:body.ty})})],
+    ['POST','/api/hub/say',({body})=>hub.say(String(body.tok||''),body.k,body.i)],
+    ['POST','/api/hub/interact',({body})=>hub.interact(String(body.tok||''),String(body.id||''))],
+    ['POST','/api/hub/report',({body})=>hub.report(String(body.tok||''),String(body.target||''),body.reason)],
+    ['GET','/api/admin/hub-reports',({user})=>{need(user,'admin');return {reports:(db.data.hubReports||[]).slice().reverse()}}],
 
     ['GET','/api/admin/survey',({user})=>{need(user,'admin');return {responses:db.data.surveys.map(({userId,...r})=>r)}}],
 
@@ -307,10 +317,20 @@ export function createApi({dbFile=null,adminEmails=[],secureCookie=false,commiss
     try{const v=JSON.parse(Buffer.concat(chunks).toString('utf8'));return v&&typeof v==='object'?v:{}}catch{fail(400,'bad_json','Geçersiz JSON.')}
   }
 
+  function streamHub(req,res){
+    const user=currentUser(req),q=new URL(req.url,'http://x').searchParams;
+    res.writeHead(200,{'Content-Type':'text/event-stream; charset=utf-8','Cache-Control':'no-store','Connection':'keep-alive','X-Accel-Buffering':'no','X-Content-Type-Options':'nosniff'});
+    res.write('retry: 3000\n\n');
+    const r=hub.join({userId:user?.id||null,name:user?.name||null,stamps:user?.stamps||[],avatar:{c:Number(q.get('c')),e:Number(q.get('e'))},room:q.get('room')},res);
+    if(r.error){res.write('event: full\ndata: {}\n\n');return res.end()}
+    req.on('close',()=>hub.leave(r.tok));
+  }
+
   async function handle(req,res){
     const send=(status,obj)=>{res.writeHead(status,{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'});res.end(JSON.stringify(obj))};
     try{
       const {pathname}=new URL(req.url,'http://localhost');
+      if(req.method==='GET'&&pathname==='/api/hub/stream')return streamHub(req,res);
       let route,params={};
       for(const r of routes){const m=r.re.exec(pathname);if(m&&r.method===req.method){route=r;r.keys.forEach((k,i)=>params[k]=decodeURIComponent(m[i+1]));break}}
       if(!route)fail(404,'not_found','Uç nokta bulunamadı.');
@@ -327,5 +347,5 @@ export function createApi({dbFile=null,adminEmails=[],secureCookie=false,commiss
       console.error(e);send(500,{error:'server_error',message:'Sunucu hatası.'});
     }
   }
-  return {handle,db};
+  return {handle,db,hub,close:()=>hub.close()};
 }

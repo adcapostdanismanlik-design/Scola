@@ -73,6 +73,15 @@ Sunucuyla açıldığında (`npm run dev`) çalışır; dosya olarak açılırsa
 - XP kazanınca yüzen "+N XP", seviye atlayınca kutlama; kartlarda imleçle eğim, kademeli giriş, dönen hero kelimesi, kıvılcım patlamaları, paralaks.
 - `prefers-reduced-motion` açıkken tüm hareketler kapanır (çark sonucu anında verir, otomatik balon çıkmaz). Bu katman yalnız süstür; XP, ödeme veya hak kararı vermez.
 
+### Scola Meydanı: çok oyunculu hub (v0.6)
+
+- Gerçek zamanlı 2B alan (`#hub`): giriş yapmadan misafir olarak da girilir; herkes aynı Meydan'da yürür, birbirini görür. Altyapı bağımlılıksız (SSE + POST); sunucu otoriterdir (konum, hız sınırı, çarpışma, kapı, damga kararları `server/hub.mjs`'de).
+- **Binalar gerçek görevlere açılır:** Sanat Atölyesi, Kültür Müzesi, Müzik Sahnesi, Oyun Salonu, Pazar → yaklaşıp E'ye (ya da dokun) basınca ilgili görev açılır. Görev Panosu → Görev meydanı.
+- **Gizemli Ada (iş birliği):** Kaşif Kapısı'ndan geçilir. Kapı, iki kişinin aynı anda iki plakaya (1,5 sn) basmasıyla açılır; tek başına açılamaz. Sonra 3 ipucu bulunur, sandık açılınca odadaki herkes **Ada Kaşifi** damgası alır. Oda 15 sn sonra yeniden kurulur. Damga XP değildir (oyunla XP farm edilmesin).
+- **Güvenli sohbet:** serbest metin ve özel mesaj YOKTUR; yalnız 12 hazır cümle ve 8 emoji. Oyuncuya tıklayıp sessize alabilir ya da bildirebilirsin; bildirimler `/api/admin/hub-reports` ile yöneticiye gider. Misafirlere rastgele ad verilir; üyeler hesap adıyla görünür. Karakter: 8 renk × 10 yüz.
+- Kontroller: WASD / ok tuşları, tıkla-git, telefonda sanal joystick, E ile etkileşim. "Yerler & kişiler" paneli klavye ile de kullanılabilir. Kapasite: Meydan 60, Ada 20 kişi; 3 dk hareketsiz oyuncu atılır.
+- Sınırlar: tek süreçli sunucu için tasarlandı (yatay ölçek için ortak durum/Redis gerekir); canvas oyunu ekran okuyucuya tam erişilebilir değildir (yedek: Yerler & kişiler listesi); hesapsız misafir damgaları sayfa yenilenince kaybolur; sunucu tarafı küfür/uygunsuz ad denetimi yoktur (serbest metin olmadığı için yalnız hesap adları risklidir).
+
 ## Çalışan özellikler (demo)
 
 - Altı bölüm: keşif, görev meydanı, akademi, üretim alanı, topluluk, etki ve destek.
