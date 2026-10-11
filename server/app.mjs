@@ -5,7 +5,7 @@ import {randomBytes,scryptSync,timingSafeEqual,createHash} from 'node:crypto';
 import {openDb} from './db.mjs';
 import {missions,missionById} from './missions.mjs';
 
-const TASK_XP=100,MIN_REWARD=50,MAX_REWARD=5000,MAX_OPEN_TASKS=5,SESSION_DAYS=14,MAX_BODY=64*1024,FEEDBACK_MIN=40,RING_DAYS=30;
+const AGE_BANDS=['13-15','16-17','18-24','25+'],AREAS=['art','culture','music','game','trade','tech','craft','content'],HOURS=['0-1','2-4','5-8','9+'],ROLES=['do','post','teach','team'],SURVEY_PER_HOUR=10,TASK_XP=100,MIN_REWARD=50,MAX_REWARD=5000,MAX_OPEN_TASKS=5,SESSION_DAYS=14,MAX_BODY=64*1024,FEEDBACK_MIN=40,RING_DAYS=30;
 const now=()=>new Date().toISOString();
 const id=()=>randomBytes(9).toString('base64url');
 const sha=s=>createHash('sha256').update(s).digest('hex');
@@ -28,7 +28,7 @@ export function createApi({dbFile=null,adminEmails=[],secureCookie=false,commiss
     share:`Tek kazanan. Scola komisyonu %${commissionPct}, ödemeden düşülür.`});
   const contract=cid=>missionById(cid)||(()=>{const t=db.data.tasks.find(t=>t.id===cid);return t?taskContract(t):null})();
   const admins=new Set(adminEmails.map(e=>e.trim().toLowerCase()).filter(Boolean));
-  const loginFailures=new Map();
+  const loginFailures=new Map(),surveyHits=new Map();
 
   const audit=(d,actor,action,target,detail={})=>d.auditLog.push({id:id(),at:now(),actor,action,target,detail});
   const publicUser=u=>({id:u.id,name:u.name,email:u.email,interest:u.interest,roles:u.roles,createdAt:u.createdAt});
@@ -235,6 +235,38 @@ export function createApi({dbFile=null,adminEmails=[],secureCookie=false,commiss
 
     // Herkese açık, anonim emanet defteri: açık kaynak güven modelinin görünür kısmı.
     ['GET','/api/ledger',()=>({testMode:true,commissionPct,entries:db.data.auditLog.filter(a=>a.action.startsWith('escrow.')).slice(-50).reverse().map(a=>({at:a.at,type:a.action.slice(7),task:db.data.tasks.find(t=>t.id===a.target)?.title||a.target,gross:a.detail.gross,commission:a.detail.commission,net:a.detail.net}))})],
+
+    // Anket: yarışmacı / ziyaretçi ilgi alanı verisi. Ad, e-posta, telefon, okul sorulmaz;
+    // yaş yalnız aralık olarak alınır. Açık özet yalnız en az 3 yanıt varken gösterilir.
+    ['POST','/api/survey',({user,body,req})=>{
+      if(body.consent!==true)fail(400,'consent_required','Devam etmek için bilgilendirmeyi onaylaman gerekir.');
+      if(!AGE_BANDS.includes(body.ageBand))fail(400,'invalid_age','Yaş aralığını seç.');
+      if(!HOURS.includes(body.hours))fail(400,'invalid_hours','Haftalık süreyi seç.');
+      const areas={};for(const k of AREAS){const a=body.areas?.[k]||{};const i=Number(a.interest),p=Number(a.practice);if(!Number.isInteger(i)||i<0||i>3||!Number.isInteger(p)||p<0||p>3)fail(400,'invalid_areas','Her alan için ilgi ve uygulama düzeyini seç.');areas[k]={interest:i,practice:p}}
+      const roles=(Array.isArray(body.roles)?body.roles:[]).filter(r=>ROLES.includes(r));
+      const txt=(v,max)=>typeof v==='string'?v.trim().slice(0,max):'';
+      const rating=body.siteRating==null||body.siteRating===''?null:Number(body.siteRating);if(rating!==null&&(!Number.isInteger(rating)||rating<1||rating>5))fail(400,'invalid_rating','Puan 1–5 arası olmalı.');
+      const ip=req.socket.remoteAddress||'',hits=(surveyHits.get(ip)||[]).filter(t=>Date.now()-t<36e5);
+      if(hits.length>=SURVEY_PER_HOUR)fail(429,'rate_limited','Bu bağlantıdan çok fazla yanıt geldi. Biraz sonra dene.');
+      hits.push(Date.now());surveyHits.set(ip,hits);
+      return db.tx(d=>{
+        const rec={id:id(),at:now(),userId:user?.id||null,ageBand:body.ageBand,hours:body.hours,areas,roles,learn:txt(body.learn,300),teach:txt(body.teach,300),expect:txt(body.expect,300),siteRating:rating,siteNote:txt(body.siteNote,400),nickname:txt(body.nickname,30)};
+        const prev=user?d.surveys.findIndex(x=>x.userId===user.id):-1;
+        if(prev>=0){d.surveys[prev]=rec}else d.surveys.push(rec);
+        return {ok:true,updated:prev>=0};
+      });
+    }],
+
+    ['GET','/api/survey/summary',()=>{
+      const S=db.data.surveys,n=S.length;if(n<3)return {n,hidden:true,message:'Anonimlik için özet en az 3 yanıttan sonra gösterilir.'};
+      const avg=a=>a.length?Math.round(a.reduce((x,y)=>x+y,0)/a.length*100)/100:0,count=(list,key)=>Object.fromEntries(list.map(k=>[k,S.filter(x=>Array.isArray(x[key])?x[key].includes(k):x[key]===k).length]));
+      const ratings=S.map(x=>x.siteRating).filter(x=>x!=null);
+      return {n,hidden:false,ageBands:count(AGE_BANDS,'ageBand'),hours:count(HOURS,'hours'),roles:count(ROLES,'roles'),
+        areas:Object.fromEntries(AREAS.map(k=>[k,{avgInterest:avg(S.map(x=>x.areas[k].interest)),interested:S.filter(x=>x.areas[k].interest>=2).length,practicing:S.filter(x=>x.areas[k].practice>=2).length}])),
+        siteRating:{n:ratings.length,avg:avg(ratings)}};
+    }],
+
+    ['GET','/api/admin/survey',({user})=>{need(user,'admin');return {responses:db.data.surveys.map(({userId,...r})=>r)}}],
 
     ['GET','/api/admin/users',({user})=>{need(user,'admin');return {users:db.data.users.map(u=>({...publicUser(u),xp:xpOf(u.id)}))}}],
 

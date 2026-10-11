@@ -146,16 +146,39 @@ try{
   const esc=api.db.data.escrow;assert.equal(new Set(esc.map(e=>e.taskId)).size,esc.length);
   esc.filter(e=>e.status==='released').forEach(e=>assert.equal(e.commission+e.net,e.amount));
 
+  // ---- Anket ----
+  const ar=(i,p)=>Object.fromEntries(['art','culture','music','game','trade','tech','craft','content'].map(k=>[k,{interest:i,practice:p}]));
+  const sv={consent:true,ageBand:'16-17',hours:'2-4',areas:ar(3,1),roles:['do','teach','hacker'],learn:'Dijital resim',teach:'Origami',expect:'Gerçek işler',siteRating:5,siteNote:'Güzel'};
+  assert.equal((await anon('POST','/api/survey',{...sv,consent:false})).status,400);
+  assert.equal((await anon('POST','/api/survey',{...sv,ageBand:'7'})).status,400);
+  assert.equal((await anon('POST','/api/survey',{...sv,areas:{art:{interest:9,practice:0}}})).status,400);
+  assert.equal((await anon('POST','/api/survey',{...sv,siteRating:9})).status,400);
+  assert.equal((await anon('GET','/api/survey/summary')).hidden,true);
+  assert.equal((await anon('POST','/api/survey',sv)).ok,true);
+  assert.equal((await anon('POST','/api/survey',{...sv,ageBand:'13-15',areas:ar(1,0)})).ok,true);
+  assert.equal((await anon('GET','/api/survey/summary')).hidden,true); // 2 yanıt: hâlâ gizli
+  const s3=await ayse('POST','/api/survey',{...sv,ageBand:'18-24',areas:ar(2,2)});assert.equal(s3.updated,false);
+  assert.equal((await ayse('POST','/api/survey',{...sv,ageBand:'18-24',areas:ar(2,3)})).updated,true); // girişli kullanıcı tek kayıt
+  const sum=await anon('GET','/api/survey/summary');
+  assert.equal(sum.n,3);assert.equal(sum.hidden,false);assert.equal(sum.roles.do,3);assert.equal(sum.roles.teach,3);
+  assert.equal(sum.areas.art.interested,2);assert(!JSON.stringify(sum).includes('Dijital resim')); // serbest metin açık özette yok
+  assert.equal((await ayse('GET','/api/admin/survey')).status,403);
+  const adm=await admin('GET','/api/admin/survey');assert.equal(adm.responses.length,3);assert(!JSON.stringify(adm).includes(a.user.id));
+  for(let i=0;i<9;i++)await anon('POST','/api/survey',sv);
+  assert.equal((await anon('POST','/api/survey',sv)).status,429);
+  // Yeni alan görevleri sözleşmede
+  assert(['art-reading','culture-story','trade-pitch','game-idea','music-listen'].every(id=>ms.missions.some(m=>m.id===id&&m.acceptance.length===3)));
+
   // CSRF / içerik türü
   assert.equal((await fetch(base+'/api/auth/logout',{method:'POST'})).status,415);
   assert.equal((await fetch(base+'/api/auth/logout',{method:'POST',headers:{'content-type':'application/json',origin:'https://kotu.example'},body:'{}'})).status,403);
 
   // Kalıcılık: yeni süreç aynı dosyadan aynı XP'yi okur
   const again=createApi({dbFile});
-  assert.equal(again.db.data.xpEvents.length,2);
+  assert.equal(again.db.data.xpEvents.length,2);assert(again.db.data.surveys.length>=3);
   assert(again.db.data.auditLog.some(e=>e.action==='review.accept'));
 
   await ayse('POST','/api/auth/logout',{});
   assert.equal((await ayse('GET','/api/me')).user,null);
-  console.log('PASS: api — hesap, rol, görev sözleşmesi, kör bağımsız inceleme, revizyon, idempotent XP, halka engeli, itiraz, çıkar çatışması, CSRF, kalıcılık, topluluk görevi, test emaneti, komisyon, iade, açık defter.');
+  console.log('PASS: api — hesap, rol, görev sözleşmesi, kör bağımsız inceleme, revizyon, idempotent XP, halka engeli, itiraz, çıkar çatışması, CSRF, kalıcılık, topluluk görevi, test emaneti, komisyon, iade, açık defter, anket.');
 }finally{server.close();rmSync(dir,{recursive:true,force:true})}

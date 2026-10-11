@@ -51,6 +51,14 @@ Sunucuyla açıldığında (`npm run dev`) çalışır; dosya olarak açılırsa
 - Herkese açık, anonim **emanet defteri** (`/api/ledger`): emanet, serbest bırakma ve iade kayıtları.
 - **Gerçek para yoktur.** Arayüz ve API her yerde TEST MODU yazar. Gerçek para için lisanslı ödeme sağlayıcısı (bloke/pazaryeri), hukuki inceleme, kimlik doğrulama ve reşit olmayanlar için veli onayı gerekir. Açık kaynak kod güveni tek başına sağlamaz; para sağlayıcıda tutulmalıdır.
 
+### Alan çeşitliliği ve "Seni tanıyalım" anketi (hackathon)
+
+- Test ve tasarımın yanında sanat, müzik, kültür, ticaret ve oyun tasarımı için 5 yeni deneme görevi (sunucuda sözleşmeli, 3 ölçütlü). Görev meydanında alana göre sekmeler var.
+- **Seni tanıyalım** sayfası (`#survey`, giriş gerekmez): yaş aralığı, 8 alan için ilgi + uygulama düzeyi, haftalık süre, Scola'da ne yapmak istediği, öğrenmek / öğretmek istedikleri, siteye puan ve not. Ad, e-posta, telefon, okul sorulmaz; kişi başına IP başına saatte 10 yanıt sınırı vardır.
+- **Topluluk nabzı**: en az 3 yanıttan sonra yalnızca toplam sayılar ve ortalamalar gösterilir (serbest metin açık özette yok).
+- Yöneticiler ham yanıtları görür ve CSV indirir (formül enjeksiyonuna karşı hücreler güvenli hazırlanır). Yanıt verileri `data/` altında, depo dışındadır.
+- Reşit olmayanlar için: yaş yalnız aralık olarak alınır. Gerçek yayında açık rıza metni, veli bilgilendirmesi ve saklama süresi (KVKK) hukuken gözden geçirilmelidir.
+
 ## Çalışan özellikler (demo)
 
 - Altı bölüm: keşif, görev meydanı, akademi, üretim alanı, topluluk, etki ve destek.
