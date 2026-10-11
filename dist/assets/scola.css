@@ -103,3 +103,30 @@ nav a:hover>span{animation:wiggle .55s ease}
 .sw-item{padding:12px;border-radius:10px;background:#faf7fd;margin:8px 0;font-size:12px;line-height:1.7}.sw-btns{display:flex;gap:8px;margin:8px 0;flex-wrap:wrap}.sw-btns .btn.ok{background:#e1f3c9;border-color:#7fb04f}.sw-btns .btn.bad{background:#fde3d1;border-color:#e99b66}.sw-fb{display:block;color:#6b5a80}
 .jw-sent{font-size:15px;line-height:2.4;margin:8px 0}.jw-w{border:1px solid #d8cde8;background:#fff;border-radius:8px;padding:4px 9px;font-size:14px}.jw-w.on{background:#f3e6ff;border-color:#8b65dd}.jw-w.ok{background:#e1f3c9;border-color:#7fb04f}.jw-w.bad{background:#fde3d1;border-color:#e99b66}
 @media(max-width:740px){.pw-out{grid-template-columns:repeat(2,1fr)}.cw-pot{width:78px;height:78px}}
+
+/* ---- Scola Pazar (market-ui.js) ---- */
+.mk-cover{display:grid;place-items:center;height:130px;border-radius:12px;font-size:56px;margin-bottom:12px}.mk-cover.big{height:200px;font-size:96px;min-width:200px}.mk-cover.small{height:54px;width:54px;min-width:54px;font-size:28px;margin:0 12px 0 0;border-radius:10px}
+.mk-card{position:relative;overflow:hidden}.mk-card.soldout{opacity:.6}.mk-hit{position:absolute;inset:0;background:none;border:0;z-index:1;cursor:pointer;border-radius:13px}.mk-hit:focus-visible{outline:3px solid #b899ef;outline-offset:-3px}
+.mk-badges{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}.mk-price{font-size:20px;font-weight:800;letter-spacing:-.5px;margin:6px 0}.mk-price.big{font-size:30px}
+.mk-controls{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:0 0 14px}.mk-controls .input{max-width:260px}.mk-controls select{max-width:180px}
+.mk-detail{display:flex;gap:20px;align-items:flex-start;margin:6px 0 14px}.mk-detail p{font-size:12px;line-height:1.8}
+.mk-buy{display:flex;gap:18px;align-items:flex-end;flex-wrap:wrap;margin:10px 0}.mk-buy label{font-size:11px;font-weight:700}.mk-buy .input{width:90px;display:block;margin-top:5px}.mk-total{font-size:14px}.mk-total b{font-size:20px}
+.mk-order{display:flex;align-items:flex-start}.mk-order>div{flex:1;font-size:12px;line-height:1.7}.mk-order small{color:var(--muted)}
+#mkEm button,#mkCol button{width:40px;height:40px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px var(--line);background:#f4eefa;font-size:20px}#mkEm button.sel,#mkCol button.sel{box-shadow:0 0 0 3px #7a4fd0}
+@media(max-width:740px){.mk-detail{flex-direction:column}.mk-cover.big{width:100%;height:150px}.mk-controls .input,.mk-controls select{max-width:none;width:100%}}
+
+.mk-order>.mk-cover{flex:none}
+/* ---- Eğitim oyunlaştırması (learn-game.js) ---- */
+.lg-board{margin:0 0 20px;background:linear-gradient(135deg,#faf7fd,#f3f9e9)}.lg-board h3{margin:4px 0 0;font-size:18px}.lg-board h4{margin:20px 0 8px;font-size:12px;letter-spacing:.4px}
+.lg-top{display:flex;justify-content:space-between;gap:14px;align-items:center;flex-wrap:wrap}
+.lg-stats{display:flex;gap:12px;flex-wrap:wrap;align-items:stretch;margin:14px 0}.lg-stats>div{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 16px}.lg-stats b{display:block;font-size:18px}.lg-stats small{font-size:10px;color:var(--muted)}
+.lg-week{display:flex!important;gap:5px;align-items:center}.lg-week i{width:14px;height:14px;border-radius:50%;background:#e9e2f3}.lg-week i.on{background:#7fb04f}
+.lg-quests{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}.lg-quest{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:12px}.lg-quest.done{background:#eef8dc;border-color:#bcd98f}.lg-quest .progress-track{margin:8px 0 4px}.lg-quest small{color:var(--muted);font-size:10px}
+.lg-paths{display:grid;gap:10px}.lg-path{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px}.lg-path.complete{background:#eef8dc;border-color:#bcd98f}.lg-path-h{display:flex;align-items:center;gap:8px;font-size:12px;margin-bottom:8px}.lg-path-h small{margin-left:auto;color:var(--muted)}
+.lg-chain{display:flex;align-items:stretch;gap:6px;flex-wrap:wrap}.lg-chain>i{font-style:normal;color:#b9aacb;align-self:center;font-size:18px}
+.lg-node{display:grid;grid-template-columns:auto 1fr;gap:2px 8px;align-items:center;text-align:left;border:1px solid #e3d6f0;background:#faf7fd;border-radius:10px;padding:8px 10px;min-width:150px;max-width:210px;cursor:pointer}.lg-node:hover{background:#f3e9fb}.lg-node>span{grid-row:1/3;width:26px;height:26px;border-radius:50%;background:#e9e2f3;display:grid;place-items:center;font-weight:800;font-size:12px}.lg-node.done{background:#e9f6d3;border-color:#bcd98f}.lg-node.done>span{background:#7fb04f;color:#fff}.lg-node small{font-size:10px;line-height:1.3}.lg-node .lg-stars{grid-column:2;font-size:11px}
+.lg-stars{color:#e0a615;letter-spacing:1px;font-size:12px}.course-footer-meta+.teacher-row .lg-stars{margin-left:auto;margin-right:6px}
+.lg-badges{margin-top:16px}.lg-badges summary{cursor:pointer;font-weight:700;font-size:12px}.lg-bgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:12px}.lg-badge{background:#f4f1f8;border-radius:12px;padding:12px;text-align:center;opacity:.65}.lg-badge.on{background:#fff7d6;opacity:1;box-shadow:0 4px 14px #d9b23a30}.lg-badge span{font-size:28px;display:block}.lg-badge b{font-size:11px;display:block;margin:4px 0}.lg-badge small{font-size:9px;color:var(--muted);line-height:1.4;display:block}
+.lg-combo{min-height:22px;font-weight:800;color:#d9772b;margin:4px 0 8px}.lg-dots{display:flex;gap:6px;margin-top:16px}.lg-dots i{flex:1;height:5px;border-radius:5px;background:#e9e2f3}.lg-dots i.done{background:#7fb04f}.lg-dots i.cur{background:#8b65dd}
+.lg-goal small{font-size:11px;line-height:1.7}
+@media(max-width:740px){.lg-node{min-width:0;max-width:none;flex:1 1 140px}}

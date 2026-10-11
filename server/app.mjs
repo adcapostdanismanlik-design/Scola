@@ -6,6 +6,7 @@ import {openDb} from './db.mjs';
 import {missions,missionById} from './missions.mjs';
 import {createHub,MAPS} from './hub.mjs';
 import {createGrowth} from './growth.mjs';
+import {createMarket} from './market.mjs';
 
 const AGE_BANDS=['13-15','16-17','18-24','25+'],AREAS=['art','culture','music','game','trade','tech','craft','content'],HOURS=['0-1','2-4','5-8','9+'],ROLES=['do','post','teach','team'],SURVEY_PER_HOUR=10,TASK_XP=100,MIN_REWARD=50,MAX_REWARD=5000,MAX_OPEN_TASKS=5,SESSION_DAYS=14,MAX_BODY=64*1024,FEEDBACK_MIN=40,RING_DAYS=30;
 const now=()=>new Date().toISOString();
@@ -20,7 +21,7 @@ function checkPassword(pw,stored){const [,salt,hash]=String(stored).split('$');i
 
 const str=(v,min,max,label)=>{const s=typeof v==='string'?v.trim():'';if(s.length<min||s.length>max)fail(400,'invalid_'+label,`${label}: ${min}–${max} karakter olmalı.`);return s};
 
-export function createApi({dbFile=null,adminEmails=[],secureCookie=false,commissionPct=10,clock=Date.now}={}){
+export function createApi({dbFile=null,adminEmails=[],secureCookie=false,commissionPct=10,marketCommissionPct=8,clock=Date.now}={}){
   const db=openDb(dbFile);
   // TEST MODU: gerçek para hareketi yok. Emanet defteri, ödeme sağlayıcısı bağlandığında
   // onun bloke/serbest bırakma çağrılarının yerini alacak sunucu tarafı kayıttır.
@@ -52,6 +53,7 @@ export function createApi({dbFile=null,adminEmails=[],secureCookie=false,commiss
   const need=(user,role)=>{if(!user)fail(401,'auth_required','Önce giriş yap.');if(role&&!user.roles.includes(role))fail(403,'forbidden','Bu işlem için yetkin yok.');return user};
 
   const growth=createGrowth({db,need,fail,str,id,now,audit,contract,clock});
+  const market=createMarket({db,need,fail,str,id,audit,clock,commissionPct:marketCommissionPct});
   const submissionView=(s,{forAuthor=false}={})=>{
     const m=contract(s.missionId);
     const reviews=db.data.reviews.filter(r=>r.submissionId===s.id).map(r=>({id:r.id,decision:r.decision,checks:r.checks,feedback:r.feedback,createdAt:r.createdAt,reviewer:forAuthor?'Bağımsız değerlendirici':r.reviewerId}));
@@ -241,7 +243,7 @@ export function createApi({dbFile=null,adminEmails=[],secureCookie=false,commiss
     }],
 
     // Herkese açık, anonim emanet defteri: açık kaynak güven modelinin görünür kısmı.
-    ['GET','/api/ledger',()=>({testMode:true,commissionPct,entries:db.data.auditLog.filter(a=>a.action.startsWith('escrow.')).slice(-50).reverse().map(a=>({at:a.at,type:a.action.slice(7),task:db.data.tasks.find(t=>t.id===a.target)?.title||a.target,gross:a.detail.gross,commission:a.detail.commission,net:a.detail.net}))})],
+    ['GET','/api/ledger',()=>({testMode:true,commissionPct,entries:db.data.auditLog.filter(a=>a.action.startsWith('escrow.')).slice(-50).reverse().map(a=>({at:a.at,type:a.action.slice(7),task:db.data.tasks.find(t=>t.id===a.target)?.title||(()=>{const o=(db.data.orders||[]).find(o=>o.id===a.target);return o?'Pazar: '+(db.data.listings.find(l=>l.id===o.listingId)?.title||'ürün'):a.target})(),gross:a.detail.gross,commission:a.detail.commission,net:a.detail.net}))})],
 
     // Anket: yarışmacı / ziyaretçi ilgi alanı verisi. Ad, e-posta, telefon, okul sorulmaz;
     // yaş yalnız aralık olarak alınır. Açık özet yalnız en az 3 yanıt varken gösterilir.
@@ -286,7 +288,7 @@ export function createApi({dbFile=null,adminEmails=[],secureCookie=false,commiss
         if(kind)events.push({at:a.at,kind,text});
         if(events.length>=10)break;
       }
-      return {hubOnline:hub.counts().total,stages:growth.counts(D),users:D.users.length,openTasks:D.tasks.filter(t=>t.status==='open').length,heldTL:D.escrow.filter(e=>e.status==='held').reduce((t,e)=>t+e.amount,0)/100,
+      return {hubOnline:hub.counts().total,stages:growth.counts(D),market:market.counts(D),users:D.users.length,openTasks:D.tasks.filter(t=>t.status==='open').length,heldTL:D.escrow.filter(e=>e.status==='held').reduce((t,e)=>t+e.amount,0)/100,
         submissions:D.submissions.length,accepted:D.submissions.filter(x=>x.status==='accepted').length,surveys:D.surveys.length,events};
     }],
 
@@ -299,6 +301,7 @@ export function createApi({dbFile=null,adminEmails=[],secureCookie=false,commiss
     ['GET','/api/admin/hub-reports',({user})=>{need(user,'admin');return {reports:(db.data.hubReports||[]).slice().reverse()}}],
 
     ...growth.routes,
+    ...market.routes,
 
     ['GET','/api/admin/survey',({user})=>{need(user,'admin');return {responses:db.data.surveys.map(({userId,...r})=>r)}}],
 

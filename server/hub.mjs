@@ -32,7 +32,7 @@ export const MAPS={
       {id:'kultur',x:640,y:215,r:55,emoji:'🏺',label:'Kültür Müzesi',act:'mission',arg:'culture-story'},
       {id:'muzik',x:1060,y:240,r:55,emoji:'🎵',label:'Müzik Sahnesi',act:'mission',arg:'music-listen'},
       {id:'oyun',x:220,y:565,r:55,emoji:'🎮',label:'Oyun Salonu',act:'mission',arg:'game-idea'},
-      {id:'pazar',x:640,y:578,r:55,emoji:'🛍️',label:'Pazar',act:'mission',arg:'trade-pitch'},
+      {id:'pazar',x:640,y:578,r:55,emoji:'🛍️',label:'Scola Pazar',act:'board',arg:'market'},
       {id:'pano',x:402,y:450,r:50,emoji:'📋',label:'Görev Panosu',act:'board',arg:'missions'},
       {id:'kapi',x:1160,y:400,r:55,emoji:'🧭',label:'Kaşif Kapısı → Gizemli Ada',act:'portal',arg:'ada'},
       {id:'atolye',x:350,y:140,r:50,emoji:'🖌️',label:'Renk Atölyesi (ekip)',act:'portal',arg:'atolye'},

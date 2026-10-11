@@ -5,7 +5,7 @@
 import {readFileSync,writeFileSync,renameSync,mkdirSync,existsSync} from 'node:fs';
 import path from 'node:path';
 
-const empty=()=>({version:1,users:[],sessions:[],submissions:[],reviews:[],xpEvents:[],conflicts:[],tasks:[],escrow:[],surveys:[],hubReports:[],mentorships:[],treeApps:[],forests:[],stageEvents:[],treeConflicts:[],auditLog:[]});
+const empty=()=>({version:1,users:[],sessions:[],submissions:[],reviews:[],xpEvents:[],conflicts:[],tasks:[],escrow:[],surveys:[],hubReports:[],listings:[],orders:[],marketReports:[],mentorships:[],treeApps:[],forests:[],stageEvents:[],treeConflicts:[],auditLog:[]});
 
 export function openDb(file){
   let data=empty();

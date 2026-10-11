@@ -168,3 +168,13 @@ v0.4'te Playwright (Chromium) ile 1440×900, 820×1180 ve 390×844 boyutlarında
 - AGENTS.md: Codex'in koruyacağı kurallar.
 
 Geliştirme paketi sır, erişim anahtarı, Git kimlik bilgisi veya özel kullanıcı verisi içermez. Yayındaki Sites projesinin sahiplik manifesti taşınabilir pakete dahil edilmedi; bu paket bağımsız geliştirme içindir.
+
+## Marka ve arayüz
+
+- **Logo / avatar:** ağaca vuran ağaçkakan (`dist/assets/woodpecker.svg`, küçük boyut için `logo.svg`). Yol arkadaşı düğmesi de aynı kuşun yüzüdür.
+- **Sade, çizgisel tasarım:** tek vurgu rengi, ince koyu çizgiler, kategori sekmesi yok. Menü altı adımlık bir yol çizgisidir: Başla → Öğren → Görevler → Pazar → Meydan → Yolum. Üretim alanı, topluluk, destek ve anket altbilgidedir. Stil `dist/assets/line.css` içindedir; 3B Meydan dünyası renkli kalır.
+
+## Scola Pazar ve oyunlaştırma
+
+- **Pazar (test modu, gerçek para yok):** ilanlar bağımsız değerlendiriciden geçer, ödeme emanette tutulur, teslim/onaydan sonra %8 komisyonla serbest bırakılır (`SCOLA_MARKET_COMMISSION_PCT`). Önerilen sıralama para, takipçi ya da satış sayısına bakmaz. `npm run seed` örnek ilanlar ekler.
+- **Eğitim oyunlaştırması:** yıldız, rozet, haftalık görevler ve günlük hızlı tur. Ceza ve sıralama yoktur; Gelişim (Tohum→Orman) seviyesinden bağımsızdır ve yalnızca demodur.
