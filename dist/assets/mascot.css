@@ -1,12 +1,12 @@
 /* Ağaçkakan hareketleri. Hareket azaltma tercihinde hepsi kapanır. */
 .mascot{display:block;width:100%;height:auto;overflow:visible}
-.mascot .m-body{transform-origin:120px 300px;animation:m-breathe 3.6s ease-in-out infinite}
-.mascot .m-crest{transform-origin:125px 66px;animation:m-sway 2.8s ease-in-out infinite}
-.mascot .m-eye{transform-origin:168px 76px;animation:m-blink 5s infinite}
-.mascot .m-head{transform-origin:150px 118px}
-.mascot .m-wing{transform-origin:125px 165px}
+.mascot .m-body{transform-origin:138px 300px;animation:m-breathe 3.6s ease-in-out infinite}
+.mascot .m-crest{transform-origin:145px 62px;animation:m-sway 2.8s ease-in-out infinite}
+.mascot .m-eye{transform-origin:158px 98px;animation:m-blink 5s infinite}
+.mascot .m-head{transform-origin:150px 150px}
+.mascot .m-wing{transform-origin:112px 200px}
 .mascot .m-tail{transform-origin:110px 290px}
-.mascot .m-all{transform-origin:150px 340px}
+.mascot .m-all{transform-origin:140px 335px}
 .mascot .m-pupil{transition:transform .12s linear}
 .mascot.is-peck .m-head{animation:m-peck .6s ease-in-out 3}
 .mascot.is-peck .m-body{animation:m-nudge .6s ease-in-out 3}
