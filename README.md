@@ -185,7 +185,7 @@ Geliştirme paketi sır, erişim anahtarı, Git kimlik bilgisi veya özel kullan
 
 ## Ağaçkakan mascot'u
 
-`dist/assets/mascot.js` çizimi ve hareketleri tek kaynaktan üretir (`mascot.css` animasyonlar). Boşta nefes alır, göz kırpar, gözleri imleci izler; ara sıra gagalar, başını yatırır, kanat çırpar, zıplar. Tıklayınca gagalar, katkı kutlamasında sevinir. `prefers-reduced-motion` açıkken hareket tamamen kapanır. Hareketler süstür; XP ya da doğrulama anlamı taşımaz.
+`dist/assets/mascot.js` kesilmiş kuş görselini WebGL örgü bükmesiyle canlandırır: baş, arma, kanat, kuyruk ve gövde ayrı ayrı hareket eder (gagalama; geri çekilme-vuruş-sekme, kanat çırpma, zıplama, başı yatırma, bakınma, göz kırpma). WebGL yoksa ya da hareket azaltma açıksa sabit görsel gösterilir. Boşta nefes alır, göz kırpar, başı imleci hafifçe izler; ara sıra gagalar, başını yatırır, kanat çırpar, zıplar. Tıklayınca gagalar, katkı kutlamasında sevinir. `prefers-reduced-motion` açıkken hareket tamamen kapanır. Hareketler süstür; XP ya da doğrulama anlamı taşımaz.
 
 ## Yaşayan arayüz
 

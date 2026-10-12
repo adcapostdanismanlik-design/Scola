@@ -1,21 +1,8 @@
-/* Ağaçkakan hareketleri (referans görselden kesilmiş PNG). Hareket azaltma tercihinde hepsi kapanır. */
+/* Ağaçkakan: WebGL tuvali ya da (yedek) sabit görsel. */
 .mascot{position:relative;display:block;width:100%}
-.m-stage{position:relative;transform-origin:50% 97%;animation:m-breathe 3.6s ease-in-out infinite}
 .m-img{display:block;width:100%;height:auto;user-select:none;-webkit-user-drag:none;pointer-events:none}
-.m-lid{position:absolute;left:56%;top:16.6%;width:9%;aspect-ratio:1;border-radius:50%;background:#fff;border-bottom:3px solid #23202f;transform:translate(-50%,-50%) scaleY(0);transform-origin:50% 50%;animation:m-blink 5s infinite}
+.m-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none}
 .mascot-head{aspect-ratio:84/48;overflow:hidden}
-.mascot-head .m-stage{animation:none;transform-origin:70% 20%}
-.mascot.is-peck .m-stage{animation:m-peck .6s ease-in-out 3}
-.mascot.is-tilt .m-stage{animation:m-tilt 1.5s ease-in-out}
-.mascot.is-flap .m-stage{animation:m-wiggle .22s ease-in-out 5}
-.mascot.is-hop .m-stage{animation:m-hop .7s ease-out 1}
-.mascot.is-cheer .m-stage{animation:m-hop .5s ease-out 2,m-wiggle .22s ease-in-out 5 .1s}
-@keyframes m-breathe{50%{transform:scale(1.012,1.02)}}
-@keyframes m-blink{0%,92%,100%{transform:translate(-50%,-50%) scaleY(0)}95%{transform:translate(-50%,-50%) scaleY(1)}}
-@keyframes m-peck{0%,100%{transform:rotate(0)}40%{transform:rotate(11deg) translateY(2%) scaleY(.97)}55%{transform:rotate(-1deg)}}
-@keyframes m-tilt{30%,70%{transform:rotate(-7deg)}}
-@keyframes m-wiggle{25%{transform:rotate(-4deg)}75%{transform:rotate(4deg)}}
-@keyframes m-hop{0%{transform:translateY(0) scale(1,1)}15%{transform:scale(1.04,.95)}50%{transform:translateY(-9%)}100%{transform:translateY(0)}}
-.hero-bird{width:200px;max-width:100%;cursor:pointer}
+.mascot-head .m-img{width:100%;height:auto}
+.hero-bird{width:210px;max-width:100%;cursor:pointer}
 .logo-bird .mascot,.helper-button .mascot{width:100%}
-@media (prefers-reduced-motion:reduce){.mascot *{animation:none!important;transition:none!important}}
