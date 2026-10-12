@@ -1,32 +1,9 @@
 /* Ağaçkakan hareketleri. Hareket azaltma tercihinde hepsi kapanır. */
 .mascot{display:block;width:100%;height:auto;overflow:visible}
-.mascot .m-body{transform-origin:138px 300px;animation:m-breathe 3.6s ease-in-out infinite}
-.mascot .m-crest{transform-origin:145px 62px;animation:m-sway 2.8s ease-in-out infinite}
-.mascot .m-eye{transform-origin:158px 98px;animation:m-blink 5s infinite}
-.mascot .m-head{transform-origin:150px 150px}
-.mascot .m-wing{transform-origin:112px 200px}
-.mascot .m-tail{transform-origin:110px 290px}
-.mascot .m-all{transform-origin:140px 335px}
-.mascot .m-pupil{transition:transform .12s linear}
-.mascot.is-peck .m-head{animation:m-peck .6s ease-in-out 3}
-.mascot.is-peck .m-body{animation:m-nudge .6s ease-in-out 3}
-.mascot.is-tilt .m-head{animation:m-tilt 1.5s ease-in-out}
-.mascot.is-flap .m-wing{animation:m-flap .25s ease-in-out 4}
-.mascot.is-flap .m-all{animation:m-hop .5s ease-out 1}
-.mascot.is-hop .m-all{animation:m-hop .7s ease-out 1}
-.mascot.is-cheer .m-all{animation:m-hop .5s ease-out 2}
-.mascot.is-cheer .m-wing{animation:m-flap .25s ease-in-out 5}
-.mascot.is-cheer .m-head{animation:m-up 1.4s ease-in-out}
-@keyframes m-breathe{50%{transform:scaleY(1.018)}}
-@keyframes m-sway{50%{transform:rotate(4deg)}}
-@keyframes m-blink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.08)}}
-@keyframes m-peck{0%,100%{transform:rotate(0)}40%{transform:rotate(24deg) translateX(8px)}55%{transform:rotate(-2deg)}}
-@keyframes m-nudge{40%{transform:rotate(3deg)}}
-@keyframes m-tilt{30%,70%{transform:rotate(-12deg)}}
-@keyframes m-up{30%,70%{transform:rotate(-14deg) translateY(-4px)}}
-@keyframes m-flap{50%{transform:rotate(-38deg) translateY(-6px)}}
-@keyframes m-hop{0%{transform:translateY(0) scale(1,1)}15%{transform:scale(1.04,.94)}50%{transform:translateY(-26px)}100%{transform:translateY(0)}}
-.hero-bird{width:210px;max-width:100%;cursor:pointer}
+.mascot .m-body{transform-origin:130px 300px;animation:m-breathe 3.6s ease-in-out infinite}
+.mascot .m-crest{transform-origin:130px 56px;animation:m-sway 2.8s ease-in-out infinite}
+.mascot .m-eye{transform-origin:170px 74px;animation:m-blink 5s infinite}
+.mascot .m-head{transform-origin:150px 124px;max-width:100%;cursor:pointer}
 .logo-bird .mascot,.helper-button .mascot{width:100%;height:100%}
 @media (prefers-reduced-motion:reduce){.mascot *{animation:none!important;transition:none!important}}
 .mascot.mascot-head{overflow:hidden}
