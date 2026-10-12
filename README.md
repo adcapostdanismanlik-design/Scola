@@ -171,7 +171,7 @@ Geliştirme paketi sır, erişim anahtarı, Git kimlik bilgisi veya özel kullan
 
 ## Marka ve arayüz
 
-- **Logo / avatar:** ağaca vuran ağaçkakan (`dist/assets/woodpecker.png`, sekme simgesi `logo.png`). Yol arkadaşı düğmesi de aynı kuşun yüzüdür.
+- **Logo / avatar:** ağaca vuran ağaçkakan (kendi çizdiğimiz katmanlı SVG (`dist/assets/mascot.js`), sekme simgesi `logo.png`). Yol arkadaşı düğmesi de aynı kuşun yüzüdür.
 - **Sade, çizgisel tasarım:** tek vurgu rengi, ince koyu çizgiler, kategori sekmesi yok. Menü altı adımlık bir yol çizgisidir: Başla → Öğren → Görevler → Pazar → Meydan → Yolum. Üretim alanı, topluluk, destek ve anket altbilgidedir. Stil `dist/assets/line.css` içindedir; 3B Meydan dünyası renkli kalır.
 
 ## Scola Pazar ve oyunlaştırma
@@ -185,7 +185,7 @@ Geliştirme paketi sır, erişim anahtarı, Git kimlik bilgisi veya özel kullan
 
 ## Ağaçkakan mascot'u
 
-`dist/assets/mascot.js` kesilmiş kuş görselini WebGL örgü bükmesiyle canlandırır: baş, arma, kanat, kuyruk ve gövde ayrı ayrı hareket eder (gagalama; geri çekilme-vuruş-sekme, kanat çırpma, zıplama, başı yatırma, bakınma, göz kırpma). WebGL yoksa ya da hareket azaltma açıksa sabit görsel gösterilir. Boşta nefes alır, göz kırpar, başı imleci hafifçe izler; ara sıra gagalar, başını yatırır, kanat çırpar, zıplar. Tıklayınca gagalar, katkı kutlamasında sevinir. `prefers-reduced-motion` açıkken hareket tamamen kapanır. Hareketler süstür; XP ya da doğrulama anlamı taşımaz.
+`dist/assets/mascot.js` katmanlı SVG kuşu canlandırır: baş, arma, göz, kanat, kuyruk ve gövde ayrı ayrı hareket eder (gagalama; geri çekilme-vuruş-sekme, kanat çırpma, zıplama, başı yatırma, bakınma, göz kırpma). Hareket azaltma açıksa kuş sabit durur. Çizim projeye aittir; üçüncü taraf görsel kullanılmaz. Boşta nefes alır, göz kırpar, başı imleci hafifçe izler; ara sıra gagalar, başını yatırır, kanat çırpar, zıplar. Tıklayınca gagalar, katkı kutlamasında sevinir. `prefers-reduced-motion` açıkken hareket tamamen kapanır. Hareketler süstür; XP ya da doğrulama anlamı taşımaz.
 
 ## Yaşayan arayüz
 
