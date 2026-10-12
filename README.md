@@ -171,7 +171,7 @@ Geliştirme paketi sır, erişim anahtarı, Git kimlik bilgisi veya özel kullan
 
 ## Marka ve arayüz
 
-- **Logo / avatar:** ağaca vuran ağaçkakan (`dist/assets/woodpecker.svg`, küçük boyut için `logo.svg`). Yol arkadaşı düğmesi de aynı kuşun yüzüdür.
+- **Logo / avatar:** ağaca vuran ağaçkakan (`dist/assets/woodpecker.png`, sekme simgesi `logo.png`). Yol arkadaşı düğmesi de aynı kuşun yüzüdür.
 - **Sade, çizgisel tasarım:** tek vurgu rengi, ince koyu çizgiler, kategori sekmesi yok. Menü altı adımlık bir yol çizgisidir: Başla → Öğren → Görevler → Pazar → Meydan → Yolum. Üretim alanı, topluluk, destek ve anket altbilgidedir. Stil `dist/assets/line.css` içindedir; 3B Meydan dünyası renkli kalır.
 
 ## Scola Pazar ve oyunlaştırma
